@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mx_cream">#FFF4E0</color>
+    <color name="mx_pink">#E4007C</color>
+    <color name="mx_marigold">#F5A400</color>
+    <color name="mx_yellow">#FFD23F</color>
+    <color name="mx_orange">#F26B1D</color>
+    <color name="mx_turquoise">#00A7A7</color>
+    <color name="mx_green">#006847</color>
+    <color name="mx_red">#CE1126</color>
+    <color name="mx_purple">#7B2D8E</color>
+    <color name="mx_brown">#3E1F0D</color>
+</resources>

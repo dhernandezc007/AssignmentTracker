@@ -1,0 +1,31 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="360dp"
+    android:height="44dp"
+    android:viewportWidth="360"
+    android:viewportHeight="44">
+
+    <!-- string -->
+    <path
+        android:pathData="M0,5 L360,5"
+        android:strokeColor="@color/mx_brown"
+        android:strokeWidth="1.5" />
+
+    <path android:fillColor="@color/mx_pink"
+        android:pathData="M2,6 H38 V38 L29,32 L20,38 L11,32 L2,38 Z" />
+    <path android:fillColor="@color/mx_marigold"
+        android:pathData="M42,6 H78 V38 L69,32 L60,38 L51,32 L42,38 Z" />
+    <path android:fillColor="@color/mx_turquoise"
+        android:pathData="M82,6 H118 V38 L109,32 L100,38 L91,32 L82,38 Z" />
+    <path android:fillColor="@color/mx_red"
+        android:pathData="M122,6 H158 V38 L149,32 L140,38 L131,32 L122,38 Z" />
+    <path android:fillColor="@color/mx_green"
+        android:pathData="M162,6 H198 V38 L189,32 L180,38 L171,32 L162,38 Z" />
+    <path android:fillColor="@color/mx_purple"
+        android:pathData="M202,6 H238 V38 L229,32 L220,38 L211,32 L202,38 Z" />
+    <path android:fillColor="@color/mx_orange"
+        android:pathData="M242,6 H278 V38 L269,32 L260,38 L251,32 L242,38 Z" />
+    <path android:fillColor="@color/mx_pink"
+        android:pathData="M282,6 H318 V38 L309,32 L300,38 L291,32 L282,38 Z" />
+    <path android:fillColor="@color/mx_yellow"
+        android:pathData="M322,6 H358 V38 L349,32 L340,38 L331,32 L322,38 Z" />
+</vector>
