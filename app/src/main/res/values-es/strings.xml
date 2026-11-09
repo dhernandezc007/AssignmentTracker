@@ -31,6 +31,17 @@
     <string name="signup_have_account">¿Ya tienes cuenta?</string>
     <string name="signup_log_in_link">Inicia sesión</string>
 
-    <!-- Main (placeholder until Slice 1) -->
-    <string name="main_placeholder">¡Hola, mundo!</string>
+    <!-- Home -->
+    <string name="home_title">Tareas</string>
+    <string name="fab_add">Agregar tarea</string>
+    <string name="empty_title">Todavía no hay tareas</string>
+    <string name="empty_body">Toca Agregar tarea para anotar la primera.</string>
+    <string name="error_save">No se pudo guardar. Inténtalo de nuevo.</string>
+
+    <!-- Diálogo para agregar (Slice 1) -->
+    <string name="dialog_add_title">Nueva tarea</string>
+    <string name="field_title">Título</string>
+    <string name="field_title_error_empty">Escribe un título</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_cancel">Cancelar</string>
 </resources>

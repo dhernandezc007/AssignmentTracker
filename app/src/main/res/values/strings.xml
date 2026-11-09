@@ -36,6 +36,17 @@
     <string name="signup_have_account">Already have an account?</string>
     <string name="signup_log_in_link">Log In</string>
 
-    <!-- Main (placeholder until Slice 1) -->
-    <string name="main_placeholder">Hello World!</string>
+    <!-- Home (design.md §11.1) -->
+    <string name="home_title">Assignments</string>
+    <string name="fab_add">Add assignment</string>
+    <string name="empty_title">No assignments yet</string>
+    <string name="empty_body">Tap Add assignment to write down your first one.</string>
+    <string name="error_save">Couldn\'t save. Try again.</string>
+
+    <!-- Slice 1 add dialog (replaced by the edit screen in Slice 2) -->
+    <string name="dialog_add_title">New assignment</string>
+    <string name="field_title">Title</string>
+    <string name="field_title_error_empty">Add a title</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
 </resources>

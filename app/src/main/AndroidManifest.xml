@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -12,24 +13,31 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AssignmentTracker">
 
+        <!-- The only launcher (no login in v1). -->
         <activity
-            android:name=".LoginActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!--
+            SECURITY: placeholder, not authentication. See SEC-0-1.
+            Login and SignUp are kept in source for Phase 2 but are off the launch path:
+            not exported, no intent-filter, and nothing in the UI starts them.
+            Release builds also finish() them on open (BuildConfig.AUTH_ENABLED = false).
+        -->
         <activity
-            android:name=".SignUpActivity"
+            android:name=".LoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".MainActivity"
-            android:exported="false" />
+            android:name=".SignUpActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
 

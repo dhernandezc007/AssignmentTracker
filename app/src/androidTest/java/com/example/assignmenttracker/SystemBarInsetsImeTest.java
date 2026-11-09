@@ -13,6 +13,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,6 +25,13 @@ import org.junit.runner.RunWith;
  */
 @RunWith(AndroidJUnit4.class)
 public class SystemBarInsetsImeTest {
+
+    /** The emulator may have a hardware keyboard attached, which hides the soft one by default. */
+    @Before
+    public void showSoftKeyboardEvenWithHardKeyboard() throws Exception {
+        InstrumentationRegistry.getInstrumentation().getUiAutomation()
+                .executeShellCommand("settings put secure show_ime_with_hard_keyboard 1").close();
+    }
 
     @Test
     public void focusedBottomFieldIsScrolledFullyAboveKeyboard() {

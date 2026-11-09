@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- design.md §7.3 spacing tokens (4dp grid) -->
+    <dimen name="space_screen">16dp</dimen>
+    <dimen name="space_row_v">12dp</dimen>
+    <dimen name="row_min_one_line">56dp</dimen>
+    <dimen name="radius_card">12dp</dimen>
+    <dimen name="banner_height">44dp</dimen>
+    <dimen name="list_bottom_clearance">96dp</dimen>
+    <dimen name="title_row_height">56dp</dimen>
+    <dimen name="empty_top">96dp</dimen>
+    <dimen name="empty_art_width">200dp</dimen>
+    <dimen name="empty_body_max_width">280dp</dimen>
+    <!-- Slice 1 rows have no checkbox, so text starts at the card padding.
+         Slice 3 moves it to 60dp (text_start_in_card) when the checkbox arrives. -->
+    <dimen name="row_text_start">16dp</dimen>
+    <dimen name="fab_scroll_threshold">16dp</dimen>
+    <dimen name="dialog_content_padding">24dp</dimen>
+</resources>

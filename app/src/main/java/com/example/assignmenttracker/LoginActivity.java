@@ -19,6 +19,12 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // SECURITY: placeholder, not authentication. See SEC-0-1.
+        // Off the launch path; release builds refuse to open it at all.
+        if (!BuildConfig.AUTH_ENABLED) {
+            finish();
+            return;
+        }
         WindowCompat.enableEdgeToEdge(getWindow());
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -67,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
     private void performLogin(String email, String password) {
         setLoading(true);
 
+        // SECURITY: placeholder, not authentication. See SEC-0-1.
         // TODO: replace with real authentication (Firebase Auth, your API, etc.)
         // Example with Firebase:
         // FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)

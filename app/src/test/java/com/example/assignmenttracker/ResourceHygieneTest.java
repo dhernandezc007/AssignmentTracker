@@ -53,6 +53,15 @@ public class ResourceHygieneTest {
         }
     }
 
+    /** QA-1-4: until Slice 4 adds due dates, the empty state must not mention them. */
+    @Test
+    public void emptyStateDoesNotPromiseDueDatesYet() throws Exception {
+        String en = strings(new File(RES, "values/strings.xml"), false).get("empty_body");
+        String es = strings(new File(RES, "values-es/strings.xml"), false).get("empty_body");
+        assertFalse("EN empty_body mentions a due date: " + en, en.toLowerCase().contains("due date"));
+        assertFalse("ES empty_body mentions a due date: " + es, es.toLowerCase().contains("fecha"));
+    }
+
     @Test
     public void layoutsHaveNoHardcodedText() throws Exception {
         List<String> offenders = new ArrayList<>();

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Row, design.md §3.1, Slice 1 subset: title only (56dp). No checkbox (Slice 3), no meta
+    line (Slices 2 and 4), not tappable yet (edit is Slice 2). The background (bg_row_*) and
+    the rule's visibility are set by position in the adapter.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/space_screen"
+    android:layout_marginEnd="@dimen/space_screen"
+    android:background="@drawable/bg_row_single"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/rowTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center_vertical|start"
+        android:maxLines="2"
+        android:minHeight="@dimen/row_min_one_line"
+        android:paddingStart="@dimen/row_text_start"
+        android:paddingTop="@dimen/space_row_v"
+        android:paddingEnd="@dimen/space_screen"
+        android:paddingBottom="@dimen/space_row_v"
+        android:textAppearance="@style/TextAppearance.AT.RowTitle"
+        tools:text="Lab report: enzyme activity" />
+
+    <View
+        android:id="@+id/rowRule"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/row_text_start"
+        android:layout_marginEnd="@dimen/space_screen"
+        android:background="?attr/colorOutlineVariant"
+        android:importantForAccessibility="no" />
+</LinearLayout>
