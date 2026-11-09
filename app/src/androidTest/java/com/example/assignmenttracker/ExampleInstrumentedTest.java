@@ -21,6 +21,7 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.assignmenttracker", appContext.getPackageName());
+        // applicationId is com.dhernandez.*; the Java package/namespace stays com.example.* for now.
+        assertEquals("com.dhernandez.assignmenttracker", appContext.getPackageName());
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Patterns;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import com.example.assignmenttracker.databinding.ActivitySignUpBinding;
 
@@ -15,8 +16,10 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.enableEdgeToEdge(getWindow());
         binding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        SystemBarInsets.apply(binding.getRoot());
 
         binding.btnSignUp.setOnClickListener(v -> attemptSignUp());
         binding.tvLogin.setOnClickListener(v -> finish()); // back to login
@@ -36,19 +39,19 @@ public class SignUpActivity extends AppCompatActivity {
         boolean valid = true;
 
         if (name.isEmpty()) {
-            binding.tilName.setError("Name is required");
+            binding.tilName.setError(getString(R.string.error_name_required));
             valid = false;
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.tilEmail.setError("Enter a valid email");
+            binding.tilEmail.setError(getString(R.string.error_email_invalid));
             valid = false;
         }
         if (password.length() < 6) {
-            binding.tilPassword.setError("At least 6 characters");
+            binding.tilPassword.setError(getString(R.string.error_password_too_short));
             valid = false;
         }
         if (!confirm.equals(password)) {
-            binding.tilConfirm.setError("Passwords don't match");
+            binding.tilConfirm.setError(getString(R.string.error_passwords_mismatch));
             valid = false;
         }
 

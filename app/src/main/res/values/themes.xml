@@ -1,8 +1,49 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.AssignmentTracker" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!--
+        Light-only for v1 (no values-night). Every Material 3 color role is mapped
+        to the mx_* palette per design.md §7.1, so no stock M3 purple/grey leaks
+        into pickers, snackbars, outlines or checkboxes.
+    -->
+    <style name="Base.Theme.AssignmentTracker" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/mx_pink</item>
+        <item name="colorOnPrimary">@color/mx_white</item>
+        <item name="colorPrimaryContainer">@color/mx_pink_container</item>
+        <item name="colorOnPrimaryContainer">@color/mx_on_pink_container</item>
+
+        <item name="colorSecondary">@color/mx_green</item>
+        <item name="colorOnSecondary">@color/mx_white</item>
+        <item name="colorSecondaryContainer">@color/mx_green_container</item>
+        <item name="colorOnSecondaryContainer">@color/mx_on_green_container</item>
+
+        <item name="colorTertiary">@color/mx_marigold</item>
+        <item name="colorOnTertiary">@color/mx_brown</item>
+
+        <item name="colorError">@color/mx_red</item>
+        <item name="colorOnError">@color/mx_white</item>
+        <item name="colorErrorContainer">@color/mx_red_container</item>
+        <item name="colorOnErrorContainer">@color/mx_on_red_container</item>
+
+        <item name="android:colorBackground">@color/mx_cream</item>
+        <item name="colorOnBackground">@color/mx_brown</item>
+        <item name="colorSurface">@color/mx_white</item>
+        <item name="colorOnSurface">@color/mx_brown</item>
+        <item name="colorOnSurfaceVariant">@color/mx_brown_muted</item>
+        <item name="colorSurfaceContainerLowest">@color/mx_white</item>
+        <item name="colorSurfaceContainerLow">@color/mx_surface_high</item>
+        <item name="colorSurfaceContainer">@color/mx_surface_high</item>
+        <item name="colorSurfaceContainerHigh">@color/mx_surface_high</item>
+        <item name="colorSurfaceContainerHighest">@color/mx_surface_high</item>
+        <item name="colorOutline">@color/mx_brown_muted</item>
+        <item name="colorOutlineVariant">@color/mx_rule</item>
+
+        <item name="colorSurfaceInverse">@color/mx_brown</item>
+        <item name="colorOnSurfaceInverse">@color/mx_cream</item>
+        <item name="colorPrimaryInverse">@color/mx_yellow</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
     </style>
 
     <style name="Theme.AssignmentTracker" parent="Base.Theme.AssignmentTracker" />

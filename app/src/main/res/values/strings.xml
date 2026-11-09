@@ -1,3 +1,41 @@
 <resources>
-    <string name="app_name">AssignmentTracker</string>
+    <!-- Brand name: kept the same in every language. -->
+    <string name="app_name" translatable="false">Assignment Tracker</string>
+
+    <!-- Decorative logo glyphs (placeholder until the real logo; see tasks.md Later). -->
+    <string name="login_logo_glyph" translatable="false">🌼</string>
+    <string name="signup_logo_glyph" translatable="false">🌶️</string>
+
+    <!-- Shared form fields -->
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_full_name">Full name</string>
+    <string name="hint_confirm_password">Confirm password</string>
+
+    <!-- Validation errors -->
+    <string name="error_email_required">Email is required</string>
+    <string name="error_email_invalid">Enter a valid email</string>
+    <string name="error_password_required">Password is required</string>
+    <string name="error_password_too_short">At least 6 characters</string>
+    <string name="error_name_required">Name is required</string>
+    <string name="error_passwords_mismatch">Passwords don\'t match</string>
+
+    <!-- Login -->
+    <string name="login_title">Welcome!</string>
+    <string name="login_subtitle">Log in to organize your assignments</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_button">Log In</string>
+    <string name="login_no_account">Don\'t have an account?</string>
+    <string name="login_sign_up_link">Sign Up</string>
+    <string name="toast_password_reset_soon">Password reset coming soon</string>
+
+    <!-- Sign up -->
+    <string name="signup_title">Join the Fiesta!</string>
+    <string name="signup_subtitle">Create your account to organize your assignments</string>
+    <string name="signup_button">Sign Up</string>
+    <string name="signup_have_account">Already have an account?</string>
+    <string name="signup_log_in_link">Log In</string>
+
+    <!-- Main (placeholder until Slice 1) -->
+    <string name="main_placeholder">Hello World!</string>
 </resources>

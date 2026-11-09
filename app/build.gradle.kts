@@ -13,7 +13,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.assignmenttracker"
+        applicationId = "com.dhernandez.assignmenttracker"
         minSdk = 24
         targetSdk = 37
         versionCode = 1
@@ -37,7 +37,8 @@ android {
 }
 
 dependencies {
-    implementation(libs.activity.ktx)
+    implementation(libs.activity)
+    implementation(libs.core)
     implementation(libs.appcompat)
     implementation(libs.constraintlayout)
     implementation(libs.material)

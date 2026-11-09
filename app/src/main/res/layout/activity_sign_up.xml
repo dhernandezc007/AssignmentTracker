@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mx_cream"
     android:fillViewport="true"
     tools:context=".SignUpActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <!-- Papel picado banner -->
@@ -36,14 +36,15 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/bg_logo_circle"
                 android:gravity="center"
-                android:text="🌶️"
+                android:importantForAccessibility="no"
+                android:text="@string/signup_logo_glyph"
                 android:textSize="40sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Join the Fiesta!"
+                android:text="@string/signup_title"
                 android:textColor="@color/mx_red"
                 android:textSize="28sp"
                 android:textStyle="bold" />
@@ -52,8 +53,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Create your account to organize your assignments"
-                android:textColor="@color/mx_brown"
+                android:gravity="center"
+                android:text="@string/signup_subtitle"
+                android:textColor="?attr/colorOnBackground"
                 android:textSize="14sp" />
 
             <!-- Name -->
@@ -63,8 +65,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
-                android:hint="Full name"
-                app:boxBackgroundColor="@android:color/white"
+                android:hint="@string/hint_full_name"
+                app:boxBackgroundColor="?attr/colorSurfaceContainerLowest"
                 app:boxStrokeColor="@color/mx_marigold"
                 app:boxStrokeWidth="2dp"
                 app:hintTextColor="@color/mx_orange">
@@ -75,7 +77,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:maxLines="1"
-                    android:textColor="@color/mx_brown" />
+                    android:textColor="?attr/colorOnBackground" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Email -->
@@ -85,11 +87,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Email"
-                app:boxBackgroundColor="@android:color/white"
-                app:boxStrokeColor="@color/mx_pink"
+                android:hint="@string/hint_email"
+                app:boxBackgroundColor="?attr/colorSurfaceContainerLowest"
+                app:boxStrokeColor="?attr/colorPrimary"
                 app:boxStrokeWidth="2dp"
-                app:hintTextColor="@color/mx_pink">
+                app:hintTextColor="@color/mx_pink_deep">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etEmail"
@@ -97,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
-                    android:textColor="@color/mx_brown" />
+                    android:textColor="?attr/colorOnBackground" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Password -->
@@ -107,13 +109,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Password"
-                app:boxBackgroundColor="@android:color/white"
-                app:boxStrokeColor="@color/mx_turquoise"
+                android:hint="@string/hint_password"
+                app:boxBackgroundColor="?attr/colorSurfaceContainerLowest"
+                app:boxStrokeColor="?attr/colorSecondary"
                 app:boxStrokeWidth="2dp"
                 app:endIconMode="password_toggle"
-                app:endIconTint="@color/mx_turquoise"
-                app:hintTextColor="@color/mx_turquoise">
+                app:endIconTint="?attr/colorSecondary"
+                app:hintTextColor="?attr/colorSecondary">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPassword"
@@ -121,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:textColor="@color/mx_brown" />
+                    android:textColor="?attr/colorOnBackground" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Confirm password -->
@@ -131,8 +133,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Confirm password"
-                app:boxBackgroundColor="@android:color/white"
+                android:hint="@string/hint_confirm_password"
+                app:boxBackgroundColor="?attr/colorSurfaceContainerLowest"
                 app:boxStrokeColor="@color/mx_purple"
                 app:boxStrokeWidth="2dp"
                 app:endIconMode="password_toggle"
@@ -145,7 +147,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:textColor="@color/mx_brown" />
+                    android:textColor="?attr/colorOnBackground" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Sign up button -->
@@ -154,12 +156,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="24dp"
-                android:text="Sign Up"
+                android:text="@string/signup_button"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/colorOnSecondary"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:backgroundTint="@color/mx_green"
+                app:backgroundTint="?attr/colorSecondary"
                 app:cornerRadius="28dp"
                 app:strokeColor="@color/mx_marigold"
                 app:strokeWidth="2dp" />
@@ -174,15 +176,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Already have an account? "
-                    android:textColor="@color/mx_brown" />
+                    android:text="@string/signup_have_account"
+                    android:textColor="?attr/colorOnBackground" />
 
                 <TextView
                     android:id="@+id/tvLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Log In"
-                    android:textColor="@color/mx_pink"
+                    android:layout_marginStart="4dp"
+                    android:text="@string/signup_log_in_link"
+                    android:textColor="@color/mx_pink_deep"
                     android:textStyle="bold" />
             </LinearLayout>
 
