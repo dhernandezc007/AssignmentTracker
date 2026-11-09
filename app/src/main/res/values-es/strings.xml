@@ -53,4 +53,19 @@
     <string name="field_course_placeholder">p. ej., Biología 101</string>
     <string name="field_notes">Notas (opcional)</string>
     <string name="action_save">Guardar</string>
+
+    <!-- Hechas y eliminar (design.md §3.2, §4, §4b, §11.1; Slice 3) -->
+    <string name="section_done">Hechas</string>
+    <string name="done_header_cd_collapsed">Hechas, %1$d. Toca dos veces para mostrar.</string>
+    <string name="done_header_cd_expanded">Hechas, %1$d. Toca dos veces para ocultar.</string>
+    <string name="state_collapsed">Contraído</string>
+    <string name="state_expanded">Expandido</string>
+    <string name="checkbox_cd">Hecha: %1$s</string>
+    <string name="announce_marked_done">Marcada como hecha: %1$s</string>
+    <string name="announce_marked_open">Regresó a pendientes: %1$s</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="snackbar_deleted">Tarea eliminada</string>
+    <!-- Deshacer después de marcar como hecha (Propuesta 1, aprobada 2026-11-09) -->
+    <string name="snackbar_marked_done">Marcada como hecha</string>
+    <string name="action_undo">Deshacer</string>
 </resources>

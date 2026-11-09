@@ -94,4 +94,25 @@
         <item name="android:textColor">@color/mx_pink_deep</item>
         <item name="android:textAllCaps">false</item>
     </style>
+
+    <!-- Section / Done header label: 14sp bold, sentence case (design.md §3.2) -->
+    <style name="TextAppearance.AT.SectionLabel" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!-- Section / Done header count: 14sp regular, muted (design.md §3.2) -->
+    <style name="TextAppearance.AT.SectionCount" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- Snackbar action, design.md §4: mx_yellow (colorPrimaryInverse) on mx_brown, sentence case -->
+    <style name="Widget.AT.Button.TextButton.Snackbar" parent="Widget.Material3.Button.TextButton.Snackbar">
+        <item name="android:textAllCaps">false</item>
+    </style>
 </resources>

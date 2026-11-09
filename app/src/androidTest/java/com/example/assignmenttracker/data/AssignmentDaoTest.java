@@ -141,6 +141,84 @@ public class AssignmentDaoTest {
         assertTrue(valueOf(dao.observeAll()).isEmpty());
     }
 
+    /** Slice 3: mark done sets status, completedAt and updatedAt; undo puts the row back exactly. */
+    @Test
+    public void markDoneThenUndoRestoresTheOpenRow() {
+        Assignment a = Assignment.newTodo("d", "Quiz 3 study guide", 1_000L);
+        a.course = "Chemistry 110";
+        a.notes = "ch. 5";
+        a.dueAt = 8_000L;
+        a.updatedAt = 2_000L;
+        dao.insert(a);
+        dao.insert(Assignment.newTodo("other", "Untouched", 3_000L));
+
+        assertEquals(1, dao.updateStatus("d", Assignment.STATUS_DONE, 5_000L, 5_000L));
+        Assignment done = valueOf(dao.observeById("d"));
+        assertEquals(Assignment.STATUS_DONE, done.status);
+        assertEquals(Long.valueOf(5_000L), done.completedAt);
+        assertEquals(5_000L, done.updatedAt);
+        assertEquals("title kept", "Quiz 3 study guide", done.title);
+        assertEquals("dueAt kept", Long.valueOf(8_000L), done.dueAt);
+
+        assertEquals(1, dao.updateStatus("d", Assignment.STATUS_TODO, null, 2_000L));
+        assertSameRow(a, valueOf(dao.observeById("d")));
+        Assignment other = valueOf(dao.observeById("other"));
+        assertEquals(Assignment.STATUS_TODO, other.status);
+        assertNull(other.completedAt);
+    }
+
+    @Test
+    public void statusUpdateOfAMissingIdChangesNothing() {
+        assertEquals(0, dao.updateStatus("ghost", Assignment.STATUS_DONE, 1L, 1L));
+    }
+
+    /** Slice 3: delete removes exactly one row; restoring re-inserts the same id and fields. */
+    @Test
+    public void deleteThenRestoreBringsBackTheSameRow() {
+        Assignment a = Assignment.newTodo("del-uuid", "Lab report: enzyme activity", 1_000L);
+        a.course = "Biology 101";
+        a.notes = "Use Tuesday's data";
+        a.dueAt = 9_000L;
+        a.priority = Assignment.PRIORITY_HIGH;
+        a.status = Assignment.STATUS_DONE;
+        a.completedAt = 4_000L;
+        a.updatedAt = 4_000L;
+        dao.insert(a);
+        dao.insert(Assignment.newTodo("stay", "Stays", 2_000L));
+
+        assertEquals(1, dao.deleteById("del-uuid"));
+        List<Assignment> left = valueOf(dao.observeAll());
+        assertEquals(1, left.size());
+        assertEquals("stay", left.get(0).id);
+        AtomicReference<Assignment> gone = new AtomicReference<>(Assignment.newTodo("sentinel", "", 0));
+        dao.observeById("del-uuid").observeForever(gone::set);
+        assertNull(gone.get());
+
+        dao.insert(a);
+        assertSameRow(a, valueOf(dao.observeById("del-uuid")));
+        assertEquals(2, valueOf(dao.observeAll()).size());
+    }
+
+    @Test
+    public void deleteOfAMissingIdChangesNothing() {
+        dao.insert(Assignment.newTodo("x", "X", 1));
+        assertEquals(0, dao.deleteById("ghost"));
+        assertEquals(1, valueOf(dao.observeAll()).size());
+    }
+
+    private static void assertSameRow(Assignment want, Assignment got) {
+        assertEquals(want.id, got.id);
+        assertEquals(want.title, got.title);
+        assertEquals(want.course, got.course);
+        assertEquals(want.notes, got.notes);
+        assertEquals(want.dueAt, got.dueAt);
+        assertEquals(want.priority, got.priority);
+        assertEquals(want.status, got.status);
+        assertEquals(want.completedAt, got.completedAt);
+        assertEquals(want.createdAt, got.createdAt);
+        assertEquals(want.updatedAt, got.updatedAt);
+    }
+
     private static <T> T valueOf(LiveData<T> live) {
         AtomicReference<T> ref = new AtomicReference<>();
         live.observeForever(ref::set);

@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.assignmenttracker.data.AssignmentLimits;
 import com.example.assignmenttracker.data.entity.Assignment;
 import com.example.assignmenttracker.data.repo.AssignmentRepository;
 
@@ -21,9 +22,9 @@ import java.util.function.Supplier;
  */
 public class AssignmentEditViewModel extends ViewModel {
 
-    /** design.md §5.2 caps (title: {@link TitleValidator#MAX_LENGTH}). */
-    public static final int MAX_COURSE = 60;
-    public static final int MAX_NOTES = 2000;
+    /** design.md §5.2 caps, shared with the repository (SEC-2-1; title: {@link TitleValidator#MAX_LENGTH}). */
+    public static final int MAX_COURSE = AssignmentLimits.MAX_COURSE;
+    public static final int MAX_NOTES = AssignmentLimits.MAX_NOTES;
 
     public enum SaveResult { INVALID_TITLE, STARTED, BUSY }
 

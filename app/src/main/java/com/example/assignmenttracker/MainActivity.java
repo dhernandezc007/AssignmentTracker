@@ -11,17 +11,28 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.assignmenttracker.data.entity.Assignment;
 import com.example.assignmenttracker.databinding.ActivityMainBinding;
 import com.example.assignmenttracker.ui.assignments.AssignmentEditActivity;
 import com.example.assignmenttracker.ui.assignments.AssignmentListAdapter;
 import com.example.assignmenttracker.ui.assignments.AssignmentsViewModel;
+import com.example.assignmenttracker.ui.assignments.HomeItems;
+import com.example.assignmenttracker.ui.assignments.SwipeToDeleteCallback;
+import com.google.android.material.snackbar.Snackbar;
 
 /** Home: the assignment list (design.md §2). The app's only launcher. */
 public class MainActivity extends AppCompatActivity {
 
+    /** design.md §4: the Undo snackbar shows for 5 s. */
+    private static final int UNDO_MS = 5000;
+
     private ActivityMainBinding binding;
+    private AssignmentsViewModel viewModel;
+    private AssignmentListAdapter adapter;
+    @Nullable private Snackbar snackbar;
     private boolean openingEditor;
 
     @Override
@@ -37,17 +48,48 @@ public class MainActivity extends AppCompatActivity {
                 AssignmentsViewModel.factory(((App) getApplication()).getAssignmentRepository()))
                 .get(AssignmentsViewModel.class);
 
-        AssignmentListAdapter adapter = new AssignmentListAdapter(a -> openEditor(a.id));
+        viewModel = vm;
+        AssignmentListAdapter.Listener listener = new AssignmentListAdapter.Listener() {
+            @Override
+            public void onRowClick(@NonNull Assignment a) {
+                openEditor(a.id);
+            }
+
+            @Override
+            public void onToggleDone(@NonNull Assignment a, boolean done) {
+                toggleDone(a, done);
+            }
+
+            @Override
+            public void onDelete(@NonNull Assignment a) {
+                delete(a);
+            }
+
+            @Override
+            public void onToggleDoneSection() {
+                vm.toggleDoneExpanded();
+            }
+        };
+        adapter = new AssignmentListAdapter(listener);
         binding.list.setAdapter(adapter);
+        new ItemTouchHelper(new SwipeToDeleteCallback(this, adapter, listener, binding.list))
+                .attachToRecyclerView(binding.list);
         // DES-1-4: RecyclerView makes itself focusable in its constructor (so XML can't turn
         // it off). Focused, it draws the platform's grey highlight over the whole list in
         // keyboard mode. Rows are the focus targets and draw their own ripple focus state.
         binding.list.setFocusable(false);
         binding.list.setFocusableInTouchMode(false);
         vm.getHomeItems().observe(this, items -> {
-            boolean grew = items.size() > adapter.getItemCount() && adapter.getItemCount() > 0;
-            // Keep a just-added (newest-first) row in view.
-            adapter.submitList(items, grew ? () -> binding.list.scrollToPosition(0) : null);
+            // Keep a just-added (newest-first) row in view; an expand or an undo doesn't jump.
+            boolean newAtTop = HomeItems.newRowAtTop(adapter.getCurrentList(), items);
+            adapter.submitList(items, newAtTop ? () -> binding.list.scrollToPosition(0) : null);
+        });
+        vm.getWriteFailed().observe(this, failed -> {
+            if (!Boolean.TRUE.equals(failed)) return;
+            // A failed delete leaves the swiped row off-screen; rebind so it slides back.
+            adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+            showSnackbar(Snackbar.make(binding.main, R.string.error_save, Snackbar.LENGTH_LONG));
+            vm.onWriteFailureShown();
         });
 
         binding.fabAdd.setOnClickListener(v -> openEditor(null));
@@ -70,6 +112,39 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         openingEditor = false;
+    }
+
+    /**
+     * Mark done or reopen (design.md §4b). The row leaves its place, so TalkBack hears where it
+     * went. Marking done also offers Undo (Proposal 1, approved 2026-11-09), because the Done
+     * section is collapsed and the row seems to vanish.
+     */
+    @SuppressWarnings("deprecation") // announceForAccessibility: §4b; no non-deprecated equivalent on API 24+
+    private void toggleDone(@NonNull Assignment a, boolean done) {
+        Assignment before = viewModel.setDone(a, done);
+        binding.list.announceForAccessibility(getString(
+                done ? R.string.announce_marked_done : R.string.announce_marked_open, a.title));
+        if (done) {
+            showSnackbar(Snackbar.make(binding.main, R.string.snackbar_marked_done, UNDO_MS)
+                    .setAction(R.string.action_undo, v -> viewModel.undoStatus(before)));
+        }
+    }
+
+    /** Swipe or TalkBack delete (design.md §4): gone from Room now, back on Undo. */
+    private void delete(@NonNull Assignment a) {
+        Assignment kept = viewModel.delete(a);
+        showSnackbar(Snackbar.make(binding.main, R.string.snackbar_deleted, UNDO_MS)
+                .setAction(R.string.action_undo, v -> viewModel.restore(kept)));
+    }
+
+    /**
+     * Above the FAB. A new snackbar replaces the one showing; the earlier action stays done.
+     * Material extends the timeout for accessibility users on its own.
+     */
+    private void showSnackbar(@NonNull Snackbar s) {
+        if (snackbar != null) snackbar.dismiss();
+        snackbar = s;
+        s.setAnchorView(binding.fabAdd).show();
     }
 
     /**

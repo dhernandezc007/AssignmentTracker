@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Done header, design.md §3.2: serape swatch, "Done", the count, and a chevron at the end.
+    The whole row is one tap target (48dp min, full width, ripple) and one accessibility node,
+    a heading whose content description and state ("Collapsed" / "Expanded") are set by the
+    adapter. Collapsed on every launch.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/doneHeader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:accessibilityHeading="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/touch_target"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/space_screen"
+    android:paddingTop="@dimen/header_padding_top"
+    android:paddingEnd="@dimen/space_screen"
+    android:paddingBottom="@dimen/header_padding_bottom"
+    tools:targetApi="28">
+
+    <ImageView
+        android:id="@+id/doneSwatch"
+        android:layout_width="@dimen/swatch_width"
+        android:layout_height="@dimen/swatch_height"
+        android:importantForAccessibility="no"
+        android:src="@drawable/serape_swatch" />
+
+    <TextView
+        android:id="@+id/doneLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/swatch_gap"
+        android:importantForAccessibility="no"
+        android:text="@string/section_done"
+        android:textAppearance="@style/TextAppearance.AT.SectionLabel" />
+
+    <TextView
+        android:id="@+id/doneCount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/header_count_gap"
+        android:layout_weight="1"
+        android:importantForAccessibility="no"
+        android:textAppearance="@style/TextAppearance.AT.SectionCount"
+        tools:text="3" />
+
+    <ImageView
+        android:id="@+id/doneChevron"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_expand_more" />
+</LinearLayout>

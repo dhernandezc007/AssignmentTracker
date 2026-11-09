@@ -11,12 +11,30 @@
     <dimen name="empty_top">96dp</dimen>
     <dimen name="empty_art_width">200dp</dimen>
     <dimen name="empty_body_max_width">280dp</dimen>
-    <!-- Slice 1 rows have no checkbox, so text starts at the card padding.
-         Slice 3 moves it to 60dp (text_start_in_card) when the checkbox arrives. -->
-    <dimen name="row_text_start">16dp</dimen>
     <dimen name="fab_scroll_threshold">16dp</dimen>
     <dimen name="row_min_two_line">72dp</dimen>
     <dimen name="ribbon_height">6dp</dimen>
     <dimen name="toolbar_height">64dp</dimen>
     <dimen name="button_height">56dp</dimen>
+
+    <!-- Slice 3, design.md §3.1: a 48dp checkbox target 4dp from the card edge, so the row
+         text (and the rule under it) starts 52dp in. -->
+    <dimen name="checkbox_target">48dp</dimen>
+    <dimen name="checkbox_margin_start">4dp</dimen>
+    <dimen name="text_start_in_card">52dp</dimen>
+    <dimen name="touch_target">48dp</dimen>
+
+    <!-- design.md §3.2 section / Done header -->
+    <dimen name="header_padding_top">16dp</dimen>
+    <dimen name="header_padding_bottom">8dp</dimen>
+    <dimen name="swatch_width">16dp</dimen>
+    <dimen name="swatch_height">20dp</dimen>
+    <dimen name="swatch_gap">12dp</dimen>
+    <dimen name="header_count_gap">8dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
+
+    <!-- design.md §4 swipe background -->
+    <dimen name="swipe_content_inset">20dp</dimen>
+    <dimen name="swipe_icon_gap">8dp</dimen>
+    <dimen name="swipe_label_size">14sp</dimen>
 </resources>

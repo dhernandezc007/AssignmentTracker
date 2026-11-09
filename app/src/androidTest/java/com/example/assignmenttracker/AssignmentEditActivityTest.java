@@ -211,6 +211,63 @@ public class AssignmentEditActivityTest {
         }
     }
 
+    /**
+     * QA-2-1: once the late notes counter is on, typing at the end of a long note keeps the
+     * counter in view (it used to sit below the visible area, under the pinned Save).
+     */
+    @Test
+    public void notesCounterStaysInViewWhileTyping() {
+        TestDb.insert(Assignment.newTodo("r1", "Quiz", 1_000L));
+        StringBuilder sb = new StringBuilder();
+        while (sb.length() < 1795) sb.append("lab notes ");
+        String start = sb.substring(0, 1795);
+        try (ActivityScenario<AssignmentEditActivity> s = ActivityScenario.launch(editIntent("r1"))) {
+            EditScreenWaits.settled(false);
+            s.onActivity(a -> {
+                EditText notes = a.findViewById(R.id.etNotes);
+                notes.requestFocus();
+                notes.setText(start);
+                notes.setSelection(notes.length());
+            });
+            for (int i = 0; i < 10; i++) {
+                s.onActivity(a -> ((EditText) a.findViewById(R.id.etNotes)).getText().append('x'));
+            }
+            assertTrue("counter on", counterEnabled(s));
+            assertTrue("the counter (bottom of the notes field) is inside the visible scroll area",
+                    EditScreenWaits.eventually(() -> {
+                        boolean[] ok = {false};
+                        s.onActivity(a -> {
+                            View til = a.findViewById(R.id.tilNotes);
+                            View scroll = a.findViewById(R.id.scroll);
+                            int[] t = new int[2];
+                            int[] sc = new int[2];
+                            til.getLocationOnScreen(t);
+                            scroll.getLocationOnScreen(sc);
+                            ok[0] = t[1] + til.getHeight() <= sc[1] + scroll.getHeight();
+                        });
+                        return ok[0];
+                    }));
+            s.onActivity(a -> {
+                EditText notes = a.findViewById(R.id.etNotes);
+                View scroll = a.findViewById(R.id.scroll);
+                android.text.Layout layout = notes.getLayout();
+                int line = layout.getLineForOffset(notes.getSelectionEnd());
+                int[] n = new int[2];
+                int[] sc = new int[2];
+                notes.getLocationOnScreen(n);
+                scroll.getLocationOnScreen(sc);
+                int cursorTop = n[1] + notes.getTotalPaddingTop() + layout.getLineTop(line);
+                assertTrue("the cursor line stays visible too", cursorTop >= sc[1]);
+            });
+        }
+    }
+
+    private static boolean counterEnabled(ActivityScenario<AssignmentEditActivity> s) {
+        boolean[] on = {false};
+        s.onActivity(a -> on[0] = ((TextInputLayout) a.findViewById(R.id.tilNotes)).isCounterEnabled());
+        return on[0];
+    }
+
     private static String repeat(char c, int n) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < n; i++) sb.append(c);

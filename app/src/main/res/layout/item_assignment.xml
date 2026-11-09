@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Row, design.md §3.1, Slice 2 subset: title plus line 2 (course, hidden when empty). No
-    checkbox yet (Slice 3) and no due label (Slice 4). The whole row is one tappable,
-    focusable node that opens Add/Edit. The ripple and focus state (DES-1-4) are the
-    foreground, clipped to the bg_row_* shape by clipToOutline. The background (bg_row_*),
-    the rule and the min height are set by the adapter.
+    Row, design.md §3.1, Slice 3: checkbox at the start, then title plus line 2 (course, hidden
+    when empty). No due label yet (Slice 4). Two separate targets that never overlap: the
+    48dp checkbox (mark done) and the rest of the row (open Add/Edit). The row is one focusable
+    node whose TextViews are read with it; the checkbox is its own focus stop, first in order.
+    The ripple and focus state (DES-1-4) are the foreground, clipped to the bg_row_* shape by
+    clipToOutline. The background (bg_row_*), the rule and the min height are set by the adapter.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/row"
     android:layout_width="match_parent"
@@ -27,38 +29,57 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="@dimen/row_min_one_line"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/row_text_start"
-        android:paddingTop="@dimen/space_row_v"
-        android:paddingEnd="@dimen/space_screen"
-        android:paddingBottom="@dimen/space_row_v">
+        android:orientation="horizontal"
+        android:paddingStart="0dp"
+        android:paddingEnd="@dimen/space_screen">
 
-        <TextView
-            android:id="@+id/rowTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textAppearance="@style/TextAppearance.AT.RowTitle"
-            tools:text="Lab report: enzyme activity" />
+        <!-- 48dp target, 4dp in: the 18dp box sits about 19dp from the card edge (§3.1).
+             Content description ("Done: <title>") is set per row by the adapter. -->
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/rowCheck"
+            android:layout_width="@dimen/checkbox_target"
+            android:layout_height="@dimen/checkbox_target"
+            android:layout_marginStart="@dimen/checkbox_margin_start"
+            android:minWidth="@dimen/checkbox_target"
+            android:minHeight="@dimen/checkbox_target"
+            app:buttonTint="@color/checkbox_tint" />
 
-        <TextView
-            android:id="@+id/rowMeta"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/rowText"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textAppearance="@style/TextAppearance.AT.RowMeta"
-            android:visibility="gone"
-            tools:text="Biology 101"
-            tools:visibility="visible" />
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/space_row_v"
+            android:paddingBottom="@dimen/space_row_v">
+
+            <TextView
+                android:id="@+id/rowTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAppearance="@style/TextAppearance.AT.RowTitle"
+                tools:text="Lab report: enzyme activity" />
+
+            <TextView
+                android:id="@+id/rowMeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAppearance="@style/TextAppearance.AT.RowMeta"
+                android:visibility="gone"
+                tools:text="Biology 101"
+                tools:visibility="visible" />
+        </LinearLayout>
     </LinearLayout>
 
     <View
         android:id="@+id/rowRule"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginStart="@dimen/row_text_start"
+        android:layout_marginStart="@dimen/text_start_in_card"
         android:layout_marginEnd="@dimen/space_screen"
         android:background="?attr/colorOutlineVariant"
         android:importantForAccessibility="no" />

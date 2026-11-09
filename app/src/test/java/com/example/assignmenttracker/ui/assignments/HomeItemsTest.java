@@ -90,4 +90,111 @@ public class HomeItemsTest {
         assertEquals("parts join with the separator", "Due today · Math 151",
                 RowMeta.join(" · ", "Due today", null, "", "Math 151"));
     }
+
+    // ---- Slice 3: the Done section (design.md §3.3) ----
+
+    private static Assignment done(String id, long completedAt) {
+        Assignment a = Assignment.newTodo(id, "T" + id, 1);
+        a.status = Assignment.STATUS_DONE;
+        a.completedAt = completedAt;
+        return a;
+    }
+
+    @Test
+    public void doneItemsGoUnderACollapsedDoneHeaderBelowTheOpenOnes() {
+        List<HomeItem> items = HomeItems.build(List.of(
+                Assignment.newTodo("o1", "Open 1", 3), done("d1", 10), Assignment.newTodo("o2", "Open 2", 2)));
+        assertEquals("two open rows, then the header; done rows hidden", 3, items.size());
+        assertEquals("o1", items.get(0).getAssignment().id);
+        assertEquals(RowPosition.TOP, items.get(0).getPosition());
+        assertEquals("o2", items.get(1).getAssignment().id);
+        assertEquals(RowPosition.BOTTOM, items.get(1).getPosition());
+        HomeItem header = items.get(2);
+        assertEquals(HomeItem.TYPE_DONE_HEADER, header.getType());
+        assertEquals(1, header.getDoneCount());
+        assertEquals(false, header.isExpanded());
+    }
+
+    @Test
+    public void expandedDoneShowsItsOwnCardNewestCompletedFirst() {
+        List<HomeItem> items = HomeItems.build(List.of(
+                Assignment.newTodo("o1", "Open", 3), done("old", 10), done("new", 30), done("mid", 20)), true);
+        assertEquals(5, items.size());
+        assertEquals(RowPosition.SINGLE, items.get(0).getPosition());
+        assertEquals(HomeItem.TYPE_DONE_HEADER, items.get(1).getType());
+        assertEquals(3, items.get(1).getDoneCount());
+        assertEquals(true, items.get(1).isExpanded());
+        assertEquals("new", items.get(2).getAssignment().id);
+        assertEquals(RowPosition.TOP, items.get(2).getPosition());
+        assertEquals("mid", items.get(3).getAssignment().id);
+        assertEquals(RowPosition.MIDDLE, items.get(3).getPosition());
+        assertEquals("old", items.get(4).getAssignment().id);
+        assertEquals(RowPosition.BOTTOM, items.get(4).getPosition());
+    }
+
+    @Test
+    public void everythingDoneShowsOnlyTheDoneHeaderWhileCollapsed() {
+        List<HomeItem> collapsed = HomeItems.build(List.of(done("d1", 1), done("d2", 2)));
+        assertEquals(1, collapsed.size());
+        assertEquals(HomeItem.TYPE_DONE_HEADER, collapsed.get(0).getType());
+        assertEquals(2, collapsed.get(0).getDoneCount());
+        List<HomeItem> expanded = HomeItems.build(List.of(done("d1", 1)), true);
+        assertEquals(2, expanded.size());
+        assertEquals(RowPosition.SINGLE, expanded.get(1).getPosition());
+    }
+
+    @Test
+    public void noDoneItemsMeansNoDoneHeader() {
+        for (HomeItem i : HomeItems.build(List.of(Assignment.newTodo("o", "O", 1)), true)) {
+            assertEquals(HomeItem.TYPE_ROW, i.getType());
+        }
+    }
+
+    @Test
+    public void statusAndCompletedAtChangesAreContentChanges() {
+        Assignment open = Assignment.newTodo("a", "A", 1);
+        Assignment closed = done("a", 5);
+        closed.title = "A";
+        HomeItem x = HomeItems.build(List.of(open)).get(0);
+        HomeItem y = HomeItems.build(List.of(closed), true).get(1);
+        assertEquals(true, x.sameItemAs(y));
+        assertEquals(false, x.sameContentAs(y));
+    }
+
+    @Test
+    public void doneHeaderIsOneItemWhoseContentIsCountAndExpanded() {
+        HomeItem a = HomeItems.build(List.of(done("d1", 1))).get(0);
+        HomeItem b = HomeItems.build(List.of(done("d1", 1), done("d2", 2))).get(0);
+        HomeItem c = HomeItems.build(List.of(done("d1", 1)), true).get(0);
+        assertEquals(true, a.sameItemAs(b));
+        assertEquals(false, a.sameContentAs(b));
+        assertEquals(false, a.sameContentAs(c));
+        assertEquals(true, a.sameContentAs(HomeItems.build(List.of(done("d9", 9))).get(0)));
+    }
+
+    /** design.md §4: a removal changes the neighbours' corners, which must count as a change. */
+    @Test
+    public void removingTheBottomRowRebindsTheNewBottom() {
+        Assignment a = Assignment.newTodo("a", "A", 3);
+        Assignment b = Assignment.newTodo("b", "B", 2);
+        Assignment c = Assignment.newTodo("c", "C", 1);
+        HomeItem before = HomeItems.build(List.of(a, b, c)).get(1);
+        HomeItem after = HomeItems.build(List.of(a, b)).get(1);
+        assertEquals(RowPosition.MIDDLE, before.getPosition());
+        assertEquals(RowPosition.BOTTOM, after.getPosition());
+        assertEquals(false, before.sameContentAs(after));
+    }
+
+    /** Home scrolls to the top only for a row that is new at the top, not for an expand. */
+    @Test
+    public void newRowAtTopDetectsOnlyANewFirstRow() {
+        List<HomeItem> one = HomeItems.build(List.of(Assignment.newTodo("a", "A", 1), done("d", 1)));
+        List<HomeItem> added = HomeItems.build(List.of(Assignment.newTodo("n", "N", 2),
+                Assignment.newTodo("a", "A", 1), done("d", 1)));
+        List<HomeItem> expanded = HomeItems.build(List.of(Assignment.newTodo("a", "A", 1), done("d", 1)), true);
+        assertEquals(true, HomeItems.newRowAtTop(one, added));
+        assertEquals(false, HomeItems.newRowAtTop(one, expanded));
+        assertEquals(false, HomeItems.newRowAtTop(Collections.emptyList(), one));
+        assertEquals(false, HomeItems.newRowAtTop(added, one));
+    }
 }

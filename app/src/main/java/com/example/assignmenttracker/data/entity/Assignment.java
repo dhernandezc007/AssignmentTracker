@@ -70,4 +70,25 @@ public class Assignment {
         a.updatedAt = now;
         return a;
     }
+
+    /** A field-for-field copy, kept in memory for Undo (Slice 3). */
+    @NonNull
+    public Assignment copy() {
+        Assignment a = new Assignment();
+        a.id = id;
+        a.course = course;
+        a.title = title;
+        a.notes = notes;
+        a.dueAt = dueAt;
+        a.priority = priority;
+        a.status = status;
+        a.completedAt = completedAt;
+        a.createdAt = createdAt;
+        a.updatedAt = updatedAt;
+        return a;
+    }
+
+    public boolean isDone() {
+        return STATUS_DONE.equals(status);
+    }
 }

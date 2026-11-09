@@ -69,8 +69,10 @@ public class AssignmentEditActivity extends AppCompatActivity {
         // Enter stays "Next" (no textMultiLine) while a long title still wraps to 3 lines.
         binding.etTitle.setHorizontallyScrolling(false);
         binding.etTitle.setMaxLines(TITLE_MAX_LINES);
-        binding.etNotes.addTextChangedListener(new AfterChange(s ->
-                binding.tilNotes.setCounterEnabled(s.length() > NOTES_COUNTER_FROM)));
+        binding.etNotes.addTextChangedListener(new AfterChange(s -> {
+            binding.tilNotes.setCounterEnabled(s.length() > NOTES_COUNTER_FROM);
+            keepNotesCounterInView();
+        }));
 
         binding.btnSave.setOnClickListener(v -> attemptSave());
 
@@ -103,6 +105,35 @@ public class AssignmentEditActivity extends AppCompatActivity {
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         binding.etTitle.addTextChangedListener(new AfterChange(s -> binding.tilTitle.setError(null)));
+    }
+
+    /**
+     * QA-2-1: while the late notes counter is on and the student types in Notes, scroll just
+     * enough to show the counter under the field. The scroll view on its own only keeps the
+     * cursor line in view, which left the counter under the pinned Save. If the field is so
+     * tall that the cursor and the counter can't both fit, the cursor wins.
+     */
+    private void keepNotesCounterInView() {
+        if (!binding.tilNotes.isCounterEnabled() || !binding.etNotes.hasFocus()) return;
+        // After the text change has been laid out and the platform has scrolled to the cursor.
+        binding.scroll.post(() -> {
+            android.text.Layout layout = binding.etNotes.getLayout();
+            if (layout == null || !binding.tilNotes.isCounterEnabled()) return;
+            int viewport = binding.scroll.getHeight() - binding.scroll.getPaddingTop()
+                    - binding.scroll.getPaddingBottom();
+            android.graphics.Rect r = new android.graphics.Rect(0, 0, 0, binding.tilNotes.getHeight());
+            binding.scroll.offsetDescendantRectToMyCoords(binding.tilNotes, r);
+            int counterBottom = r.bottom;
+            r.set(0, 0, 0, 0);
+            binding.scroll.offsetDescendantRectToMyCoords(binding.etNotes, r);
+            int line = layout.getLineForOffset(binding.etNotes.getSelectionEnd());
+            int cursorTop = r.top + binding.etNotes.getTotalPaddingTop() + layout.getLineTop(line);
+
+            int y = binding.scroll.getScrollY();
+            if (counterBottom <= y + viewport) return;         // already visible
+            if (counterBottom - cursorTop > viewport) return;   // can't show both: keep the cursor
+            binding.scroll.scrollTo(0, counterBottom - viewport);
+        });
     }
 
     private void onOriginalLoaded(@Nullable Assignment a) {

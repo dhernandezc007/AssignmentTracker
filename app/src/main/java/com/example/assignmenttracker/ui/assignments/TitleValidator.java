@@ -5,7 +5,7 @@ import androidx.annotation.Nullable;
 /** Title rule for the add/edit screen: trimmed, not blank, at most 200 characters. */
 public final class TitleValidator {
 
-    public static final int MAX_LENGTH = 200;
+    public static final int MAX_LENGTH = com.example.assignmenttracker.data.AssignmentLimits.MAX_TITLE;
 
     private TitleValidator() {
     }

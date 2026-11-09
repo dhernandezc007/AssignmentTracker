@@ -214,6 +214,17 @@ public class AssignmentEditViewModelTest {
             pending.add(done);
         }
 
+        @Override
+        public void updateStatus(@NonNull String id, @NonNull String status, @Nullable Long completedAt,
+                                 long updatedAt, @NonNull WriteCallback done) {
+            throw new AssertionError("the edit screen never changes status");
+        }
+
+        @Override
+        public void delete(@NonNull String id, @NonNull WriteCallback done) {
+            throw new AssertionError("the edit screen never deletes");
+        }
+
         void completeLast(@Nullable Throwable error) {
             pending.remove(pending.size() - 1).onComplete(error);
         }

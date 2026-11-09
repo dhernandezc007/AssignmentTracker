@@ -35,6 +35,25 @@ public final class TestDb {
         }
     }
 
+    /** Every column of one row, by name, or null if it doesn't exist (Slice 3 undo checks). */
+    @Nullable
+    public static java.util.Map<String, Object> fullRow(String id) {
+        try (Cursor c = app().getDatabase().query("SELECT * FROM assignments WHERE id = ?", new Object[]{id})) {
+            if (!c.moveToFirst()) return null;
+            java.util.Map<String, Object> out = new java.util.TreeMap<>();
+            for (int i = 0; i < c.getColumnCount(); i++) {
+                Object v;
+                switch (c.getType(i)) {
+                    case Cursor.FIELD_TYPE_NULL: v = null; break;
+                    case Cursor.FIELD_TYPE_INTEGER: v = c.getLong(i); break;
+                    default: v = c.getString(i); break;
+                }
+                out.put(c.getColumnName(i), v);
+            }
+            return out;
+        }
+    }
+
     /** {title, course, notes, updatedAt} for one row, or null if it doesn't exist. */
     @Nullable
     public static Object[] row(String id) {

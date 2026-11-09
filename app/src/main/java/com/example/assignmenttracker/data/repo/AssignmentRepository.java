@@ -37,4 +37,17 @@ public interface AssignmentRepository {
      */
     void updateFields(@NonNull String id, @NonNull String title, @Nullable String course,
                       @Nullable String notes, long updatedAt, @NonNull WriteCallback done);
+
+    /**
+     * Sets status, completedAt and updatedAt (mark done, reopen, undo). {@code completedAt} is
+     * required for DONE and must be null otherwise. Reports an error if the id doesn't exist.
+     */
+    void updateStatus(@NonNull String id, @NonNull String status, @Nullable Long completedAt,
+                      long updatedAt, @NonNull WriteCallback done);
+
+    /**
+     * Deletes one assignment. Undo is {@link #insert} of the entity the caller kept.
+     * Reports an error if the id doesn't exist.
+     */
+    void delete(@NonNull String id, @NonNull WriteCallback done);
 }

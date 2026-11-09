@@ -42,4 +42,22 @@ public interface AssignmentDao {
     @Query("UPDATE assignments SET title = :title, course = :course, notes = :notes, "
             + "updatedAt = :updatedAt WHERE id = :id")
     int updateFields(String id, String title, @Nullable String course, @Nullable String notes, long updatedAt);
+
+    /**
+     * Mark done / reopen / undo (Slice 3). Only status, completedAt and updatedAt change.
+     *
+     * @return the number of rows changed (0 if the id doesn't exist)
+     */
+    @Query("UPDATE assignments SET status = :status, completedAt = :completedAt, "
+            + "updatedAt = :updatedAt WHERE id = :id")
+    int updateStatus(String id, String status, @Nullable Long completedAt, long updatedAt);
+
+    /**
+     * Swipe delete (Slice 3): exactly one row, by id. Undo re-inserts the kept entity with
+     * {@link #insert}. There is no bulk delete (SEC-1-1).
+     *
+     * @return the number of rows deleted (0 if the id doesn't exist)
+     */
+    @Query("DELETE FROM assignments WHERE id = :id")
+    int deleteById(String id);
 }

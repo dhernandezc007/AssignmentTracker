@@ -58,4 +58,20 @@
     <string name="field_course_placeholder">e.g. Biology 101</string>
     <string name="field_notes">Notes (optional)</string>
     <string name="action_save">Save</string>
+
+    <!-- Done and delete (design.md §3.2, §4, §4b, §11.1; Slice 3) -->
+    <string name="section_done">Done</string>
+    <string name="done_header_cd_collapsed">Done, %1$d. Double-tap to show.</string>
+    <string name="done_header_cd_expanded">Done, %1$d. Double-tap to hide.</string>
+    <string name="state_collapsed">Collapsed</string>
+    <string name="state_expanded">Expanded</string>
+    <!-- TalkBack adds "checkbox, checked / not checked" after this. -->
+    <string name="checkbox_cd">Done: %1$s</string>
+    <string name="announce_marked_done">Marked done: %1$s</string>
+    <string name="announce_marked_open">Moved back to open: %1$s</string>
+    <string name="action_delete">Delete</string>
+    <string name="snackbar_deleted">Assignment deleted</string>
+    <!-- Undo after mark done (Proposal 1, approved 2026-11-09) -->
+    <string name="snackbar_marked_done">Marked done</string>
+    <string name="action_undo">Undo</string>
 </resources>
