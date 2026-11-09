@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Add / Edit, design.md §5 (Slice 2: no due date field yet; it arrives in Slice 4 between
+    Course and Notes). Insets: SystemBarInsets pads the root for the system bars and turns the
+    keyboard into a bottom margin, so Save rides above the IME (§5.1).
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.assignments.AssignmentEditActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="?android:attr/colorBackground"
+        android:elevation="0dp"
+        app:navigationContentDescription="@string/edit_close_cd"
+        app:navigationIcon="@drawable/ic_close"
+        app:navigationIconTint="?attr/colorOnBackground"
+        app:titleTextAppearance="@style/TextAppearance.AT.ToolbarTitle"
+        tools:title="@string/edit_title_new" />
+
+    <ImageView
+        android:id="@+id/ribbon"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ribbon_height"
+        android:importantForAccessibility="no"
+        android:scaleType="fitXY"
+        android:src="@drawable/serape_stripes" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/space_screen">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilTitle"
+                style="@style/Widget.AT.TextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/field_title"
+                app:counterEnabled="true"
+                app:counterMaxLength="200">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapSentences"
+                    android:maxLength="200"
+                    android:nextFocusForward="@id/etCourse" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCourse"
+                style="@style/Widget.AT.TextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_screen"
+                android:hint="@string/field_course"
+                app:placeholderText="@string/field_course_placeholder">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCourse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapWords"
+                    android:maxLength="60"
+                    android:maxLines="1"
+                    android:nextFocusForward="@id/etNotes" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- The counter is turned on in code only past 1800 characters (design.md §5.2). -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilNotes"
+                style="@style/Widget.AT.TextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_screen"
+                android:hint="@string/field_notes"
+                app:counterEnabled="false"
+                app:counterMaxLength="2000">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|start"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLength="2000"
+                    android:minLines="3" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSave"
+        style="@style/Widget.AT.Button.Pill"
+        android:layout_width="match_parent"
+        android:layout_marginStart="@dimen/space_screen"
+        android:layout_marginEnd="@dimen/space_screen"
+        android:layout_marginBottom="@dimen/space_screen"
+        android:text="@string/action_save" />
+</LinearLayout>

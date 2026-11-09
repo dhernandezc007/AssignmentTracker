@@ -38,10 +38,19 @@
     <string name="empty_body">Toca Agregar tarea para anotar la primera.</string>
     <string name="error_save">No se pudo guardar. Inténtalo de nuevo.</string>
 
-    <!-- Diálogo para agregar (Slice 1) -->
-    <string name="dialog_add_title">Nueva tarea</string>
+    <!-- Fila (design.md §3.1) -->
+    <string name="meta_separator">" · "</string>
+    <!-- TalkBack: "Toca dos veces para editar" -->
+    <string name="action_edit">editar</string>
+
+    <!-- Agregar / editar (design.md §5, §11.1) -->
+    <string name="edit_title_new">Nueva tarea</string>
+    <string name="edit_title_edit">Editar tarea</string>
+    <string name="edit_close_cd">Cerrar sin guardar</string>
     <string name="field_title">Título</string>
     <string name="field_title_error_empty">Escribe un título</string>
+    <string name="field_course">Materia (opcional)</string>
+    <string name="field_course_placeholder">p. ej., Biología 101</string>
+    <string name="field_notes">Notas (opcional)</string>
     <string name="action_save">Guardar</string>
-    <string name="action_cancel">Cancelar</string>
 </resources>

@@ -43,10 +43,19 @@
     <string name="empty_body">Tap Add assignment to write down your first one.</string>
     <string name="error_save">Couldn\'t save. Try again.</string>
 
-    <!-- Slice 1 add dialog (replaced by the edit screen in Slice 2) -->
-    <string name="dialog_add_title">New assignment</string>
+    <!-- Row (design.md §3.1). Spaces are kept by the quotes. -->
+    <string name="meta_separator">" · "</string>
+    <!-- TalkBack: "Double-tap to edit" on a row (design.md §10) -->
+    <string name="action_edit">edit</string>
+
+    <!-- Add / Edit screen (design.md §5, §11.1) -->
+    <string name="edit_title_new">New assignment</string>
+    <string name="edit_title_edit">Edit assignment</string>
+    <string name="edit_close_cd">Close without saving</string>
     <string name="field_title">Title</string>
     <string name="field_title_error_empty">Add a title</string>
+    <string name="field_course">Course (optional)</string>
+    <string name="field_course_placeholder">e.g. Biology 101</string>
+    <string name="field_notes">Notes (optional)</string>
     <string name="action_save">Save</string>
-    <string name="action_cancel">Cancel</string>
 </resources>

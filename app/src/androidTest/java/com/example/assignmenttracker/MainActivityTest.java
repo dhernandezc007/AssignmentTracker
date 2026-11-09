@@ -1,51 +1,42 @@
 package com.example.assignmenttracker;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.closeSoftKeyboard;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import android.os.SystemClock;
 import android.view.View;
-
-import android.view.WindowManager;
-import android.widget.Button;
 
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.assignmenttracker.ui.assignments.AddAssignmentDialogFragment;
-import com.example.assignmenttracker.ui.assignments.HomeItem;
-
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.google.android.material.textfield.TextInputLayout;
+import com.example.assignmenttracker.data.entity.Assignment;
+import com.example.assignmenttracker.ui.assignments.HomeItem;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/** Slice 1 end to end: empty state, FAB, title-only dialog, inline error, new row. */
+/** Home end to end: empty state, FAB → new screen, row tap → edit screen, save and discard. */
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
     @Before
     public void clearDatabase() {
-        App app = ApplicationProvider.getApplicationContext();
-        app.getDatabase().assignmentDao().deleteAll();
+        TestDb.clear();
     }
 
     @Test
@@ -58,49 +49,172 @@ public class MainActivityTest {
     }
 
     @Test
-    public void emptyTitleIsRejectedInline() {
+    public void fabOpensTheNewAssignmentScreenAndSaveAddsTheRowWithItsCourse() {
         try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
             onView(withId(R.id.fabAdd)).perform(click());
-            waitForDialogSettled(s);
-            onView(withText(R.string.action_save)).perform(click());
-            // Dialog stays open and the field shows the error.
-            onView(withId(R.id.tilTitle)).check((v, e) -> {
-                if (e != null) throw e;
-                CharSequence err = ((TextInputLayout) v).getError();
-                assertEquals(v.getContext().getString(R.string.field_title_error_empty),
-                        err == null ? null : err.toString());
-            });
-            onView(withText(R.string.dialog_add_title)).check(matches(isDisplayed()));
+            EditScreenWaits.settled(true);
+            onView(withText(R.string.edit_title_new)).check(matches(isDisplayed()));
+            onView(withId(R.id.etTitle)).perform(replaceText("Essay outline"));
+            onView(withId(R.id.etCourse)).perform(replaceText("English 101"));
+            EditScreenWaits.settled(true);
+            onView(withId(R.id.btnSave)).perform(click());
+
+            assertTrue("the list holds the new row", EditScreenWaits.eventually(() -> firstType(s) == HomeItem.TYPE_ROW));
+            onView(withText("Essay outline")).check(matches(isDisplayed()));
+            onView(withText("English 101")).check(matches(isDisplayed()));
+            assertEquals(1, TestDb.count());
         }
     }
 
     @Test
-    public void savingATitleAddsARowImmediately() {
+    public void rowWithoutACourseHidesLineTwo() {
+        TestDb.insert(Assignment.newTodo("a", "Quiz", 1));
+        try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
+            assertTrue(EditScreenWaits.eventually(() -> firstType(s) == HomeItem.TYPE_ROW));
+            s.onActivity(a -> {
+                RecyclerView list = a.findViewById(R.id.list);
+                View row = list.getChildAt(0);
+                assertEquals(View.GONE, row.findViewById(R.id.rowMeta).getVisibility());
+            });
+        }
+    }
+
+    @Test
+    public void tappingARowOpensItForEditingWithTheFieldsFilledIn() {
+        Assignment a = Assignment.newTodo("r1", "Lab report: enzyme activity", 1_000L);
+        a.course = "Biology 101";
+        a.notes = "Use Tuesday's data.";
+        TestDb.insert(a);
+        try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
+            onView(withText("Lab report: enzyme activity")).perform(click());
+            EditScreenWaits.settled(false);
+            onView(withText(R.string.edit_title_edit)).check(matches(isDisplayed()));
+            onView(withId(R.id.etTitle)).check(matches(withText("Lab report: enzyme activity")));
+            onView(withId(R.id.etCourse)).check(matches(withText("Biology 101")));
+            onView(withId(R.id.etNotes)).check(matches(withText("Use Tuesday's data.")));
+        }
+    }
+
+    /** The edit-save path: the row and its updatedAt change; the id and createdAt stay. */
+    @Test
+    public void editSaveUpdatesTheRowAndUpdatedAt() {
+        Assignment a = Assignment.newTodo("r1", "Lab report", 1_000L);
+        a.course = "Biology 101";
+        TestDb.insert(a);
+        try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
+            onView(withText("Lab report")).perform(click());
+            EditScreenWaits.settled(false);
+            onView(withId(R.id.etTitle)).perform(replaceText("Lab report v2"));
+            onView(withId(R.id.etCourse)).perform(replaceText("Chem 110"));
+            closeSoftKeyboard();
+            EditScreenWaits.settled(false);
+            onView(withId(R.id.btnSave)).perform(click());
+
+            assertTrue("row updated in the DB", EditScreenWaits.eventually(() -> {
+                Object[] r = TestDb.row("r1");
+                return r != null && "Lab report v2".equals(r[0]);
+            }));
+            Object[] r = TestDb.row("r1");
+            assertEquals("Chem 110", r[1]);
+            assertTrue("updatedAt moved forward", (long) r[3] > 1_000L);
+            assertEquals("createdAt kept", 1_000L, (long) r[4]);
+            assertEquals("no new row", 1, TestDb.count());
+            // The change animation cross-fades an old and a new view for a moment, so check the
+            // adapter's data rather than the absence of the old view.
+            assertTrue("the list shows the edit", EditScreenWaits.eventually(() -> {
+                String[] t = {null};
+                s.onActivity(act -> {
+                    RecyclerView list = act.findViewById(R.id.list);
+                    com.example.assignmenttracker.ui.assignments.AssignmentListAdapter ad =
+                            (com.example.assignmenttracker.ui.assignments.AssignmentListAdapter) list.getAdapter();
+                    if (ad != null && ad.getItemCount() == 1 && ad.getCurrentList().get(0).getAssignment() != null) {
+                        t[0] = ad.getCurrentList().get(0).getAssignment().title;
+                    }
+                });
+                return "Lab report v2".equals(t[0]);
+            }));
+            onView(withText("Lab report v2")).check(matches(isDisplayed()));
+            onView(withText("Chem 110")).check(matches(isDisplayed()));
+        }
+    }
+
+    /** Cancel discards: the ✕ leaves without saving. */
+    @Test
+    public void closeLeavesAnEditWithoutSaving() {
+        TestDb.insert(Assignment.newTodo("r1", "Lab report", 1_000L));
+        try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
+            onView(withText("Lab report")).perform(click());
+            EditScreenWaits.settled(false);
+            onView(withId(R.id.etTitle)).perform(replaceText("Should not be saved"));
+            onView(withContentDescription(R.string.edit_close_cd)).perform(click());
+
+            onView(withText("Lab report")).check(matches(isDisplayed()));
+            onView(withText("Should not be saved")).check(doesNotExist());
+            Object[] r = TestDb.row("r1");
+            assertEquals("Lab report", r[0]);
+            assertEquals("updatedAt untouched", 1_000L, (long) r[3]);
+        }
+    }
+
+    /** Cancel discards: system Back leaves without saving. */
+    @Test
+    public void backLeavesAnEditWithoutSaving() {
+        TestDb.insert(Assignment.newTodo("r1", "Lab report", 1_000L));
+        try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
+            onView(withText("Lab report")).perform(click());
+            EditScreenWaits.settled(false);
+            onView(withId(R.id.etTitle)).perform(replaceText("Should not be saved"));
+            closeSoftKeyboard();
+            pressBack();
+
+            onView(withText("Lab report")).check(matches(isDisplayed()));
+            assertEquals("Lab report", TestDb.row("r1")[0]);
+            assertEquals(1_000L, (long) TestDb.row("r1")[3]);
+        }
+    }
+
+    /** Cancel discards on a new item too: nothing is inserted. */
+    @Test
+    public void closingANewAssignmentSavesNothing() {
         try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
             onView(withId(R.id.fabAdd)).perform(click());
-            waitForDialogSettled(s);
-            // Keep the keyboard up: closing it re-centres the dialog (adjustResize), and a click
-            // computed mid-move lands outside it (touch-outside dismisses, nothing saved).
-            onView(withId(R.id.etTitle)).perform(typeText("Essay outline"));
-            waitForDialogSettled(s);
-            onView(withText(R.string.action_save)).perform(click());
-            onView(withText(R.string.dialog_add_title)).check(doesNotExist());
+            EditScreenWaits.settled(true);
+            onView(withId(R.id.etTitle)).perform(replaceText("Draft I gave up on"));
+            onView(withContentDescription(R.string.edit_close_cd)).perform(click());
 
-            // The write is async (repository executor), so wait for the list to hold just the row.
-            long deadline = SystemClock.uptimeMillis() + 5000;
-            final int[] state = new int[2]; // [0] item count, [1] first view type
-            while (SystemClock.uptimeMillis() < deadline) {
-                s.onActivity(a -> {
-                    RecyclerView.Adapter<?> ad = ((RecyclerView) a.findViewById(R.id.list)).getAdapter();
-                    state[0] = ad.getItemCount();
-                    state[1] = ad.getItemCount() > 0 ? ad.getItemViewType(0) : -1;
-                });
-                if (state[0] == 1 && state[1] == HomeItem.TYPE_ROW) break;
-                SystemClock.sleep(100);
-            }
-            assertEquals("one item", 1, state[0]);
-            assertEquals("it is a row, not the empty state", HomeItem.TYPE_ROW, state[1]);
-            onView(withText("Essay outline")).check(matches(isDisplayed()));
+            onView(withText(R.string.empty_title)).check(matches(isDisplayed()));
+            assertEquals(0, TestDb.count());
+        }
+    }
+
+    /** DES-1-4: rows are focusable and clickable so a keyboard user can reach and open them. */
+    @Test
+    public void rowsAreFocusableAndClickable() {
+        TestDb.insert(Assignment.newTodo("a", "Quiz", 1));
+        try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
+            assertTrue(EditScreenWaits.eventually(() -> firstType(s) == HomeItem.TYPE_ROW));
+            s.onActivity(a -> {
+                View row = ((RecyclerView) a.findViewById(R.id.list)).getChildAt(0);
+                assertTrue(row.isFocusable());
+                assertTrue(row.isClickable());
+                assertNotNull("ripple / focus state", row.getForeground());
+                assertTrue("ripple clipped to the row shape", row.getClipToOutline());
+            });
+        }
+    }
+
+    /**
+     * DES-1-4 follow-up: the list container itself never takes focus, so the platform's grey
+     * default focus highlight can't cover the whole list (seen with a hardware keyboard).
+     * Keyboard focus lands on the rows, which draw their own focus state.
+     */
+    @Test
+    public void listContainerIsNotFocusableSoOnlyRowsShowFocus() {
+        try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
+            s.onActivity(a -> {
+                View list = a.findViewById(R.id.list);
+                assertTrue(!list.isFocusable() && !list.isFocused());
+            });
         }
     }
 
@@ -136,86 +250,23 @@ public class MainActivityTest {
         }
     }
 
-    /**
-     * QA-1-1 root cause: a dialog window created with SOFT_INPUT_STATE_VISIBLE has its first
-     * frame held until the IME is ready, so it stayed invisible (and untappable) for ~1.5 s.
-     * The window must not ask for the IME at creation, yet the keyboard still opens by itself.
-     */
-    @Test
-    public void addDialogDoesNotHoldItsFirstFrameForTheKeyboard() {
-        try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
-            onView(withId(R.id.fabAdd)).perform(click());
-            waitForDialogSettled(s);
-            s.onActivity(a -> {
-                DialogFragment f = (DialogFragment) a.getSupportFragmentManager()
-                        .findFragmentByTag(AddAssignmentDialogFragment.TAG);
-                int state = f.getDialog().getWindow().getAttributes().softInputMode
-                        & WindowManager.LayoutParams.SOFT_INPUT_MASK_STATE;
-                assertNotEquals("dialog window must not request the IME at creation",
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE, state);
-                assertNotEquals(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE, state);
-            });
-            final boolean[] imeUp = {false};
-            long deadline = SystemClock.uptimeMillis() + 8000;
-            while (!imeUp[0] && SystemClock.uptimeMillis() < deadline) {
-                s.onActivity(a -> {
-                    DialogFragment f = (DialogFragment) a.getSupportFragmentManager()
-                            .findFragmentByTag(AddAssignmentDialogFragment.TAG);
-                    WindowInsetsCompat in = ViewCompat.getRootWindowInsets(f.getDialog().getWindow().getDecorView());
-                    imeUp[0] = in != null && in.isVisible(WindowInsetsCompat.Type.ime());
-                });
-                if (!imeUp[0]) SystemClock.sleep(100);
-            }
-            assertEquals("keyboard should open for the title field (design.md §5.2)", true, imeUp[0]);
-        }
-    }
-
-    /**
-     * Waits until the add dialog has window focus, the keyboard is up, and its Save button has
-     * stopped moving.
-     * The dialog re-centres when the soft keyboard arrives (adjustResize); Espresso computes
-     * the click point and then injects it, so a move in between would miss (QA-1-1).
-     */
-    private static void waitForDialogSettled(ActivityScenario<MainActivity> s) {
-        long deadline = SystemClock.uptimeMillis() + 8000;
-        int[] last = {-1, -1};
-        long stableSince = 0;
-        while (SystemClock.uptimeMillis() < deadline) {
-            final int[] now = {-1, -1};
-            final boolean[] focused = {false};
-            s.onActivity(a -> {
-                Fragment f = a.getSupportFragmentManager().findFragmentByTag(AddAssignmentDialogFragment.TAG);
-                if (!(f instanceof DialogFragment)) return;
-                AlertDialog d = (AlertDialog) ((DialogFragment) f).getDialog();
-                if (d == null || d.getWindow() == null) return;
-                focused[0] = d.getWindow().getDecorView().hasWindowFocus();
-                WindowInsetsCompat in = ViewCompat.getRootWindowInsets(d.getWindow().getDecorView());
-                // The app always opens the keyboard; settled means after it has arrived.
-                focused[0] = focused[0] && in != null && in.isVisible(WindowInsetsCompat.Type.ime());
-                Button save = d.getButton(AlertDialog.BUTTON_POSITIVE);
-                if (save != null && save.isShown()) save.getLocationOnScreen(now);
-            });
-            long t = SystemClock.uptimeMillis();
-            if (focused[0] && now[1] >= 0 && now[0] == last[0] && now[1] == last[1]) {
-                if (stableSince == 0) stableSince = t;
-                if (t - stableSince >= 600) return;
-            } else {
-                stableSince = 0;
-            }
-            last = now;
-            SystemClock.sleep(100);
-        }
-        throw new AssertionError("add dialog never settled (focus + stable Save position)");
-    }
-
     @Test
     public void bannerIsDecorativeAndTitleIsAHeading() {
         try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
             s.onActivity(a -> {
                 assertEquals(View.IMPORTANT_FOR_ACCESSIBILITY_NO,
                         a.findViewById(R.id.banner).getImportantForAccessibility());
-                assertEquals(true, androidx.core.view.ViewCompat.isAccessibilityHeading(a.findViewById(R.id.title)));
+                assertEquals(true, ViewCompat.isAccessibilityHeading(a.findViewById(R.id.title)));
             });
         }
+    }
+
+    private static int firstType(ActivityScenario<MainActivity> s) {
+        int[] t = {-1};
+        s.onActivity(a -> {
+            RecyclerView.Adapter<?> ad = ((RecyclerView) a.findViewById(R.id.list)).getAdapter();
+            t[0] = ad != null && ad.getItemCount() > 0 ? ad.getItemViewType(0) : -1;
+        });
+        return t[0];
     }
 }

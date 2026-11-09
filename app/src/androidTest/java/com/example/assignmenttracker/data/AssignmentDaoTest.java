@@ -2,6 +2,7 @@ package com.example.assignmenttracker.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -58,6 +59,7 @@ public class AssignmentDaoTest {
     public void insertThenQueryReturnsItWithEveryField() {
         Assignment a = Assignment.newTodo("9b2c-uuid", "Lab report: enzyme activity", 1_762_600_000_000L);
         a.notes = "Use Tuesday's data";
+        a.course = "Biology 101";
         a.dueAt = 1_762_700_000_000L;
         dao.insert(a);
 
@@ -73,7 +75,7 @@ public class AssignmentDaoTest {
         assertEquals(1_762_600_000_000L, b.createdAt);
         assertEquals(1_762_600_000_000L, b.updatedAt);
         assertEquals(null, b.completedAt);
-        assertEquals(null, b.courseId);
+        assertEquals("Biology 101", b.course);
     }
 
     @Test
@@ -97,6 +99,46 @@ public class AssignmentDaoTest {
             // ABORT keeps the first row intact.
         }
         assertEquals("A", valueOf(dao.observeAll()).get(0).title);
+    }
+
+    @Test
+    public void observeByIdReturnsTheRowOrNull() {
+        dao.insert(Assignment.newTodo("x", "X", 1));
+        assertEquals("X", valueOf(dao.observeById("x")).title);
+        AtomicReference<Assignment> missing = new AtomicReference<>(Assignment.newTodo("sentinel", "", 0));
+        dao.observeById("nope").observeForever(missing::set);
+        assertNull(missing.get());
+    }
+
+    /** Slice 2: the edit save changes title, course, notes and updatedAt, and nothing else. */
+    @Test
+    public void updateFieldsChangesOnlyTheEditedFieldsAndUpdatedAt() {
+        Assignment a = Assignment.newTodo("u", "Lab report", 1_000L);
+        a.course = "Biology 101";
+        a.notes = "old";
+        a.dueAt = 5_000L;
+        dao.insert(a);
+        dao.insert(Assignment.newTodo("other", "Untouched", 2_000L));
+
+        assertEquals(1, dao.updateFields("u", "Lab report v2", "Chem 110", null, 9_000L));
+
+        Assignment b = valueOf(dao.observeById("u"));
+        assertEquals("Lab report v2", b.title);
+        assertEquals("Chem 110", b.course);
+        assertNull(b.notes);
+        assertEquals(9_000L, b.updatedAt);
+        assertEquals("createdAt kept", 1_000L, b.createdAt);
+        assertEquals("dueAt kept", Long.valueOf(5_000L), b.dueAt);
+        assertEquals("status kept", Assignment.STATUS_TODO, b.status);
+        Assignment other = valueOf(dao.observeById("other"));
+        assertEquals("the other row is untouched", "Untouched", other.title);
+        assertEquals(2_000L, other.updatedAt);
+    }
+
+    @Test
+    public void updateOfAMissingIdChangesNothing() {
+        assertEquals(0, dao.updateFields("ghost", "T", null, null, 1L));
+        assertTrue(valueOf(dao.observeAll()).isEmpty());
     }
 
     private static <T> T valueOf(LiveData<T> live) {

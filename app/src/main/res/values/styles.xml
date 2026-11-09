@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Type scale, design.md §7.2 (only the styles Slice 1 uses) -->
+    <!-- Type scale, design.md §7.2 (only the styles Slices 1-2 use) -->
     <style name="TextAppearance.AT.ScreenTitle" parent="TextAppearance.Material3.HeadlineSmall">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
@@ -23,6 +23,31 @@
     <style name="TextAppearance.AT.StateBody" parent="TextAppearance.Material3.BodyLarge">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <!-- DES-1-2: BodyLarge tracks at 0.5sp, which looks loose next to the untracked title. -->
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- Edit toolbar title, 20sp bold (design.md §5.1) -->
+    <style name="TextAppearance.AT.ToolbarTitle" parent="TextAppearance.AT.StateTitle" />
+
+    <!-- Row line 2: 14sp regular, muted (design.md §3.1) -->
+    <style name="TextAppearance.AT.RowMeta" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- Save, design.md §5.3: Danny.s btnLogin as a style. Always enabled (§8.1 rule 1). -->
+    <style name="Widget.AT.Button.Pill" parent="Widget.Material3.Button">
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="cornerRadius">28dp</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="strokeColor">@color/mx_marigold</item>
+        <item name="strokeWidth">2dp</item>
     </style>
 
     <!-- FAB, design.md §6: Danny's login button as an extended FAB -->
@@ -49,7 +74,7 @@
         <item name="boxCornerRadiusTopEnd">@dimen/radius_card</item>
         <item name="boxCornerRadiusBottomStart">@dimen/radius_card</item>
         <item name="boxCornerRadiusBottomEnd">@dimen/radius_card</item>
-        <item name="boxStrokeColor">@color/text_field_stroke</item>
+        <item name="boxStrokeColor">@color/field_stroke</item>
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeWidthFocused">2dp</item>
         <item name="hintTextColor">@color/mx_pink_deep</item>

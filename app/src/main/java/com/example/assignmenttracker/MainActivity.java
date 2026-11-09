@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -13,15 +14,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.assignmenttracker.databinding.ActivityMainBinding;
-import com.example.assignmenttracker.ui.assignments.AddAssignmentDialogFragment;
+import com.example.assignmenttracker.ui.assignments.AssignmentEditActivity;
 import com.example.assignmenttracker.ui.assignments.AssignmentListAdapter;
 import com.example.assignmenttracker.ui.assignments.AssignmentsViewModel;
-import com.google.android.material.snackbar.Snackbar;
 
 /** Home: the assignment list (design.md §2). The app's only launcher. */
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private boolean openingEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,28 +37,20 @@ public class MainActivity extends AppCompatActivity {
                 AssignmentsViewModel.factory(((App) getApplication()).getAssignmentRepository()))
                 .get(AssignmentsViewModel.class);
 
-        AssignmentListAdapter adapter = new AssignmentListAdapter();
+        AssignmentListAdapter adapter = new AssignmentListAdapter(a -> openEditor(a.id));
         binding.list.setAdapter(adapter);
+        // DES-1-4: RecyclerView makes itself focusable in its constructor (so XML can't turn
+        // it off). Focused, it draws the platform's grey highlight over the whole list in
+        // keyboard mode. Rows are the focus targets and draw their own ripple focus state.
+        binding.list.setFocusable(false);
+        binding.list.setFocusableInTouchMode(false);
         vm.getHomeItems().observe(this, items -> {
             boolean grew = items.size() > adapter.getItemCount() && adapter.getItemCount() > 0;
             // Keep a just-added (newest-first) row in view.
             adapter.submitList(items, grew ? () -> binding.list.scrollToPosition(0) : null);
         });
 
-        vm.getSaveFailed().observe(this, failed -> {
-            if (Boolean.TRUE.equals(failed)) {
-                Snackbar.make(binding.main, R.string.error_save, Snackbar.LENGTH_LONG)
-                        .setAnchorView(binding.fabAdd)
-                        .show();
-                vm.onSaveFailedShown();
-            }
-        });
-
-        binding.fabAdd.setOnClickListener(v -> {
-            if (getSupportFragmentManager().findFragmentByTag(AddAssignmentDialogFragment.TAG) == null) {
-                new AddAssignmentDialogFragment().show(getSupportFragmentManager(), AddAssignmentDialogFragment.TAG);
-            }
-        });
+        binding.fabAdd.setOnClickListener(v -> openEditor(null));
 
         // design.md §6: shrink on scroll down past 16dp, extend on scroll up.
         int threshold = getResources().getDimensionPixelSize(R.dimen.fab_scroll_threshold);
@@ -71,6 +64,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        openingEditor = false;
+    }
+
+    /**
+     * Opens Add/Edit: new when {@code id} is null, otherwise that assignment. A fast double
+     * tap would start two screens (the QA-0-4 pattern), so only the first tap counts until
+     * Home is resumed again.
+     */
+    private void openEditor(@Nullable String id) {
+        if (openingEditor) return;
+        openingEditor = true;
+        startActivity(AssignmentEditActivity.newIntent(this, id));
     }
 
     /**

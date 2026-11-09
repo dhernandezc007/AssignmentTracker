@@ -13,6 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AssignmentTracker">
 
+        <!-- Add / Edit (Slice 2). Internal only: opened by the FAB and by tapping a row. -->
+        <activity
+            android:name=".ui.assignments.AssignmentEditActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
         <!-- The only launcher (no login in v1). -->
         <activity
             android:name=".MainActivity"

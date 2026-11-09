@@ -50,7 +50,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:clipToPadding="false"
-            android:defaultFocusHighlightEnabled="false"
             android:paddingBottom="@dimen/list_bottom_clearance"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:targetApi="26" />

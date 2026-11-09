@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e99828c00a8801b4ea9249371d031391",
+    "identityHash": "43df20766cc9fba9ea64e6ae5461f1f5",
     "entities": [
       {
         "tableName": "assignments",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `courseId` TEXT, `title` TEXT NOT NULL, `notes` TEXT, `dueAt` INTEGER, `priority` INTEGER NOT NULL DEFAULT 1, `status` TEXT NOT NULL DEFAULT 'TODO', `completedAt` INTEGER, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `course` TEXT, `title` TEXT NOT NULL, `notes` TEXT, `dueAt` INTEGER, `priority` INTEGER NOT NULL DEFAULT 1, `status` TEXT NOT NULL DEFAULT 'TODO', `completedAt` INTEGER, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -15,8 +15,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "courseId",
-            "columnName": "courseId",
+            "fieldPath": "course",
+            "columnName": "course",
             "affinity": "TEXT"
           },
           {
@@ -75,15 +75,6 @@
         },
         "indices": [
           {
-            "name": "index_assignments_courseId",
-            "unique": false,
-            "columnNames": [
-              "courseId"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_assignments_courseId` ON `${TABLE_NAME}` (`courseId`)"
-          },
-          {
             "name": "index_assignments_dueAt",
             "unique": false,
             "columnNames": [
@@ -106,7 +97,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e99828c00a8801b4ea9249371d031391')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '43df20766cc9fba9ea64e6ae5461f1f5')"
     ]
   }
 }

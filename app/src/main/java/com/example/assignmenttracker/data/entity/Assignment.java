@@ -12,11 +12,12 @@ import androidx.room.PrimaryKey;
  * millis (UTC), so a later Firestore sync needs no key migration. {@code updatedAt}
  * doubles as last-write-wins for that sync.
  *
- * <p>{@code courseId} is a plain nullable column for now: the Course table is not built
- * yet, so there is no foreign key in schema v1.
+ * <p>{@code course} is free text (brief; Slice 2). It replaced the planned {@code courseId}
+ * in schema v1, edited in place before anything was installed outside the emulator.
+ * "Courses as entities" is on the Later list.
  */
 @Entity(tableName = "assignments",
-        indices = {@Index("courseId"), @Index("dueAt"), @Index("createdAt")})
+        indices = {@Index("dueAt"), @Index("createdAt")})
 public class Assignment {
 
     public static final String STATUS_TODO = "TODO";
@@ -31,12 +32,14 @@ public class Assignment {
     @NonNull
     public String id = "";
 
+    /** Free-text course, up to 60 characters (design.md §5.2), or null when not set. */
     @Nullable
-    public String courseId;
+    public String course;
 
     @NonNull
     public String title = "";
 
+    /** Up to 2000 characters (design.md §5.2), or null when not set. */
     @Nullable
     public String notes;
 

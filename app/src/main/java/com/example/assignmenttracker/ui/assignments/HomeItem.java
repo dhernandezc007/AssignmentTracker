@@ -64,6 +64,7 @@ public final class HomeItem {
         if (!sameItemAs(other) || position != other.position) return false;
         if (type == TYPE_EMPTY) return true;
         return Objects.equals(assignment.title, other.assignment.title)
+                && Objects.equals(assignment.course, other.assignment.course)
                 && assignment.updatedAt == other.assignment.updatedAt;
     }
 }

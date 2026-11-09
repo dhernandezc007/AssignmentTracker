@@ -2,7 +2,7 @@ package com.example.assignmenttracker.ui.assignments;
 
 import androidx.annotation.Nullable;
 
-/** Title rule shared by the Slice 1 dialog and the Slice 2 edit screen. */
+/** Title rule for the add/edit screen: trimmed, not blank, at most 200 characters. */
 public final class TitleValidator {
 
     public static final int MAX_LENGTH = 200;

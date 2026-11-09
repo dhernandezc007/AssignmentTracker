@@ -15,5 +15,8 @@
          Slice 3 moves it to 60dp (text_start_in_card) when the checkbox arrives. -->
     <dimen name="row_text_start">16dp</dimen>
     <dimen name="fab_scroll_threshold">16dp</dimen>
-    <dimen name="dialog_content_padding">24dp</dimen>
+    <dimen name="row_min_two_line">72dp</dimen>
+    <dimen name="ribbon_height">6dp</dimen>
+    <dimen name="toolbar_height">64dp</dimen>
+    <dimen name="button_height">56dp</dimen>
 </resources>

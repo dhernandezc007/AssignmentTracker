@@ -67,4 +67,27 @@ public class HomeItemsTest {
         assertEquals(true, x.sameItemAs(z));
         assertEquals(false, x.sameContentAs(z));
     }
+
+    /** Slice 2: the row draws the course on line 2, so a course edit must redraw it. */
+    @Test
+    public void courseChangeIsAContentChange() {
+        Assignment a = Assignment.newTodo("a", "A", 1);
+        Assignment b = Assignment.newTodo("a", "A", 1);
+        b.course = "Biology 101";
+        HomeItem x = HomeItems.build(List.of(a)).get(0);
+        HomeItem y = HomeItems.build(List.of(b)).get(0);
+        assertEquals(true, x.sameItemAs(y));
+        assertEquals(false, x.sameContentAs(y));
+    }
+
+    /** design.md §3.1: line 2 shows the course, and is hidden when there is none. */
+    @Test
+    public void metaLineIsTheCourseOrNothing() {
+        Assignment a = Assignment.newTodo("a", "A", 1);
+        assertEquals(null, RowMeta.text(a, " · "));
+        a.course = "Math 151";
+        assertEquals("Math 151", RowMeta.text(a, " · "));
+        assertEquals("parts join with the separator", "Due today · Math 151",
+                RowMeta.join(" · ", "Due today", null, "", "Math 151"));
+    }
 }
