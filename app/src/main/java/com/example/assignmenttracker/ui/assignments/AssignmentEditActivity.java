@@ -7,12 +7,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.assignmenttracker.App;
@@ -20,7 +22,14 @@ import com.example.assignmenttracker.R;
 import com.example.assignmenttracker.SystemBarInsets;
 import com.example.assignmenttracker.data.entity.Assignment;
 import com.example.assignmenttracker.databinding.ActivityAssignmentEditBinding;
+import com.example.assignmenttracker.util.DateFormats;
+import com.example.assignmenttracker.util.DueDates;
+import com.google.android.material.color.MaterialColors;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Add / Edit screen (design.md §5). Opened by the FAB (new) and by tapping a row (edit, with
@@ -35,6 +44,9 @@ public class AssignmentEditActivity extends AppCompatActivity {
     static final int NOTES_COUNTER_FROM = 1800;
 
     private static final String KEY_PREFILLED = "prefilled";
+    /** Process death: the due date being edited (absent = none). Rotation keeps it in the ViewModel. */
+    private static final String KEY_DUE = "due";
+    private static final String TAG_PICKER = "due_picker";
     private static final int TITLE_MAX_LINES = 3;
 
     private ActivityAssignmentEditBinding binding;
@@ -75,6 +87,22 @@ public class AssignmentEditActivity extends AppCompatActivity {
         }));
 
         binding.btnSave.setOnClickListener(v -> attemptSave());
+
+        // Due date (Slice 4, design.md §5.2): tap opens the picker, the end ✕ clears it.
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_DUE)) {
+            viewModel.setDueAt(savedInstanceState.getLong(KEY_DUE));
+        }
+        viewModel.getDueAt().observe(this, this::renderDue);
+        binding.etDue.setOnClickListener(v -> openDatePicker());
+        // Keyboard users (the field is focusable by keyboard only): Enter or Space opens the picker.
+        binding.etDue.setOnKeyListener(ActivationKeys.clickOnActivation());
+        binding.tilDue.setEndIconOnClickListener(v -> clearDue());
+        Fragment shown = getSupportFragmentManager().findFragmentByTag(TAG_PICKER);
+        if (shown instanceof MaterialDatePicker) {
+            // Listeners aren't kept across a rotation; the picker itself is.
+            @SuppressWarnings("unchecked") MaterialDatePicker<Long> picker = (MaterialDatePicker<Long>) shown;
+            listenTo(picker);
+        }
 
         viewModel.getSaveStatus().observe(this, status -> {
             if (status == AssignmentEditViewModel.SaveStatus.SAVED) {
@@ -146,6 +174,7 @@ public class AssignmentEditActivity extends AppCompatActivity {
         binding.etTitle.setText(a.title);
         binding.etCourse.setText(a.course);
         binding.etNotes.setText(a.notes);
+        viewModel.setDueAt(a.dueAt);
         prefilled = true;
     }
 
@@ -163,6 +192,60 @@ public class AssignmentEditActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_PREFILLED, prefilled);
+        Long due = viewModel.getDueAt().getValue();
+        if (due != null) outState.putLong(KEY_DUE, due);
+    }
+
+    /**
+     * The ✕ hides itself once tapped, which would leave TalkBack focus nowhere; design.md §5.2
+     * asks for focus to move back to the field, the one place it can sensibly go.
+     */
+    @android.annotation.SuppressLint("AccessibilityFocus")
+    private void clearDue() {
+        viewModel.setDueAt(null);
+        binding.etDue.performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
+    }
+
+    /** design.md §5.2: the date with its year, or "No due date" in the muted color; ✕ only when set. */
+    private void renderDue(@Nullable Long due) {
+        if (due == null) {
+            binding.etDue.setText(R.string.field_due_empty);
+            binding.etDue.setTextColor(MaterialColors.getColor(binding.etDue,
+                    com.google.android.material.R.attr.colorOnSurfaceVariant));
+        } else {
+            Locale locale = getResources().getConfiguration().getLocales().get(0);
+            binding.etDue.setText(DateFormats.withYear(due, locale, TimeZone.getDefault()));
+            binding.etDue.setTextColor(MaterialColors.getColor(binding.etDue,
+                    com.google.android.material.R.attr.colorOnSurface));
+        }
+        binding.tilDue.setEndIconVisible(due != null);
+    }
+
+    /**
+     * MaterialDatePicker (design.md §5.2): opens on the current date or today, calendar mode,
+     * past dates allowed, deep-pink overlay (§8.1 rule 5). One at a time.
+     */
+    private void openDatePicker() {
+        if (getSupportFragmentManager().findFragmentByTag(TAG_PICKER) != null) return;
+        Long due = viewModel.getDueAt().getValue();
+        MaterialDatePicker<Long> picker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText(R.string.date_picker_title)
+                .setSelection(due == null ? MaterialDatePicker.todayInUtcMilliseconds()
+                        : DueDates.toPickerSelection(due, TimeZone.getDefault()))
+                .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
+                .setTheme(R.style.ThemeOverlay_AT_DatePicker)
+                .build();
+        listenTo(picker);
+        picker.showNow(getSupportFragmentManager(), TAG_PICKER);
+    }
+
+    /** The picker answers in UTC midnight; store the local start of that day. */
+    private void listenTo(@NonNull MaterialDatePicker<Long> picker) {
+        picker.addOnPositiveButtonClickListener(selection -> {
+            if (selection != null) {
+                viewModel.setDueAt(DueDates.fromPickerSelection(selection, TimeZone.getDefault()));
+            }
+        });
     }
 
     /**

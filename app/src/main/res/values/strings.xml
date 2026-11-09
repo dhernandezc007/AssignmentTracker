@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Brand name: kept the same in every language. -->
     <string name="app_name" translatable="false">Assignment Tracker</string>
 
@@ -40,11 +40,11 @@
     <string name="home_title">Assignments</string>
     <string name="fab_add">Add assignment</string>
     <string name="empty_title">No assignments yet</string>
-    <string name="empty_body">Tap Add assignment to write down your first one.</string>
+    <string name="empty_body">Tap Add assignment to write down your first one. A due date is optional.</string>
     <string name="error_save">Couldn\'t save. Try again.</string>
 
     <!-- Row (design.md §3.1). Spaces are kept by the quotes. -->
-    <string name="meta_separator">" · "</string>
+    <string name="meta_separator">" ·\u00A0"</string>
     <!-- TalkBack: "Double-tap to edit" on a row (design.md §10) -->
     <string name="action_edit">edit</string>
 
@@ -67,11 +67,59 @@
     <string name="state_expanded">Expanded</string>
     <!-- TalkBack adds "checkbox, checked / not checked" after this. -->
     <string name="checkbox_cd">Done: %1$s</string>
-    <string name="announce_marked_done">Marked done: %1$s</string>
+    <!-- Unused since DES-3-3 (the snackbar speaks); kept until the Slice 5 phone check (design.md §4b). -->
+    <string name="announce_marked_done" tools:ignore="UnusedResources">Marked done: %1$s</string>
     <string name="announce_marked_open">Moved back to open: %1$s</string>
     <string name="action_delete">Delete</string>
     <string name="snackbar_deleted">Assignment deleted</string>
     <!-- Undo after mark done (Proposal 1, approved 2026-11-09) -->
     <string name="snackbar_marked_done">Marked done</string>
     <string name="action_undo">Undo</string>
+
+    <!-- Due dates and the home screen (design.md §3.1–§3.4, §5.2, §11; Slice 4) -->
+    <string name="summary_separator">" ·\u00A0"</string>
+    <!-- Content description of the summary, so TalkBack reads a pause, not "middle dot" (§10). -->
+    <string name="summary_separator_spoken">", "</string>
+    <string name="caught_up_title">All caught up</string>
+    <string name="section_overdue">Overdue</string>
+    <string name="section_today">Today</string>
+    <string name="section_this_week">This week</string>
+    <string name="section_later">Later</string>
+    <string name="section_no_date">No date</string>
+    <!-- %1$s is a date such as "Thu, Nov 6" -->
+    <string name="due_overdue">Overdue ·\u00A0%1$s</string>
+    <!-- %1$s is a spoken date such as "Thursday, November 6" -->
+    <string name="due_overdue_spoken">Overdue, %1$s</string>
+    <string name="due_today">Due today</string>
+    <string name="due_tomorrow">Due tomorrow</string>
+    <string name="field_due">Due date</string>
+    <string name="field_due_empty">No due date</string>
+    <string name="field_due_clear_cd">Clear due date</string>
+    <string name="date_picker_title">Pick a due date</string>
+
+    <plurals name="summary_overdue">
+        <item quantity="one">%d overdue</item>
+        <item quantity="other">%d overdue</item>
+    </plurals>
+    <plurals name="summary_due_today">
+        <item quantity="one">%d due today</item>
+        <item quantity="other">%d due today</item>
+    </plurals>
+    <plurals name="summary_due_week">
+        <item quantity="one">%d due this week</item>
+        <item quantity="other">%d due this week</item>
+    </plurals>
+    <plurals name="summary_nothing_this_week">
+        <item quantity="one">Nothing due this week ·\u00A0%d open</item>
+        <item quantity="other">Nothing due this week ·\u00A0%d open</item>
+    </plurals>
+    <plurals name="caught_up_body">
+        <item quantity="one">Nothing open. %d done.</item>
+        <item quantity="other">Nothing open. %d done.</item>
+    </plurals>
+    <!-- %1$s is a section name ("Overdue"), %2$d how many rows it has. -->
+    <plurals name="section_header_cd">
+        <item quantity="one">%1$s, %2$d assignment</item>
+        <item quantity="other">%1$s, %2$d assignments</item>
+    </plurals>
 </resources>

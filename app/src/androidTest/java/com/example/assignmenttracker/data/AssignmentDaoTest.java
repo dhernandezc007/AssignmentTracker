@@ -78,15 +78,26 @@ public class AssignmentDaoTest {
         assertEquals("Biology 101", b.course);
     }
 
+    /** Slice 4 (tasks.md): ORDER BY dueAt IS NULL, dueAt; ties by createdAt, then id. */
     @Test
-    public void listIsNewestFirst() {
-        dao.insert(Assignment.newTodo("old", "Old", 1));
-        dao.insert(Assignment.newTodo("new", "New", 3));
-        dao.insert(Assignment.newTodo("mid", "Mid", 2));
-        List<Assignment> all = valueOf(dao.observeAll());
-        assertEquals("new", all.get(0).id);
-        assertEquals("mid", all.get(1).id);
-        assertEquals("old", all.get(2).id);
+    public void listIsByDueDateWithNoDateLast() {
+        Assignment late = Assignment.newTodo("late", "Late", 1);
+        late.dueAt = 9_000L;
+        Assignment soon = Assignment.newTodo("soon", "Soon", 2);
+        soon.dueAt = 1_000L;
+        Assignment tieNew = Assignment.newTodo("tieNew", "Tie new", 5);
+        tieNew.dueAt = 5_000L;
+        Assignment tieOld = Assignment.newTodo("tieOld", "Tie old", 4);
+        tieOld.dueAt = 5_000L;
+        dao.insert(Assignment.newTodo("none2", "No date 2", 8));
+        dao.insert(late);
+        dao.insert(Assignment.newTodo("none1", "No date 1", 7));
+        dao.insert(tieNew);
+        dao.insert(soon);
+        dao.insert(tieOld);
+        List<String> ids = new java.util.ArrayList<>();
+        for (Assignment a : valueOf(dao.observeAll())) ids.add(a.id);
+        assertEquals(java.util.Arrays.asList("soon", "tieOld", "tieNew", "late", "none1", "none2"), ids);
     }
 
     @Test
@@ -110,7 +121,7 @@ public class AssignmentDaoTest {
         assertNull(missing.get());
     }
 
-    /** Slice 2: the edit save changes title, course, notes and updatedAt, and nothing else. */
+    /** Slices 2 and 4: the edit save changes title, course, notes, dueAt and updatedAt, and nothing else. */
     @Test
     public void updateFieldsChangesOnlyTheEditedFieldsAndUpdatedAt() {
         Assignment a = Assignment.newTodo("u", "Lab report", 1_000L);
@@ -120,7 +131,7 @@ public class AssignmentDaoTest {
         dao.insert(a);
         dao.insert(Assignment.newTodo("other", "Untouched", 2_000L));
 
-        assertEquals(1, dao.updateFields("u", "Lab report v2", "Chem 110", null, 9_000L));
+        assertEquals(1, dao.updateFields("u", "Lab report v2", "Chem 110", null, 7_000L, 9_000L));
 
         Assignment b = valueOf(dao.observeById("u"));
         assertEquals("Lab report v2", b.title);
@@ -128,16 +139,26 @@ public class AssignmentDaoTest {
         assertNull(b.notes);
         assertEquals(9_000L, b.updatedAt);
         assertEquals("createdAt kept", 1_000L, b.createdAt);
-        assertEquals("dueAt kept", Long.valueOf(5_000L), b.dueAt);
+        assertEquals("dueAt written", Long.valueOf(7_000L), b.dueAt);
         assertEquals("status kept", Assignment.STATUS_TODO, b.status);
         Assignment other = valueOf(dao.observeById("other"));
         assertEquals("the other row is untouched", "Untouched", other.title);
         assertEquals(2_000L, other.updatedAt);
     }
 
+    /** Slice 4: clearing the due date in the edit screen writes null. */
+    @Test
+    public void updateFieldsCanClearTheDueDate() {
+        Assignment a = Assignment.newTodo("c", "Quiz", 1_000L);
+        a.dueAt = 5_000L;
+        dao.insert(a);
+        assertEquals(1, dao.updateFields("c", "Quiz", null, null, null, 2_000L));
+        assertNull(valueOf(dao.observeById("c")).dueAt);
+    }
+
     @Test
     public void updateOfAMissingIdChangesNothing() {
-        assertEquals(0, dao.updateFields("ghost", "T", null, null, 1L));
+        assertEquals(0, dao.updateFields("ghost", "T", null, null, null, 1L));
         assertTrue(valueOf(dao.observeAll()).isEmpty());
     }
 

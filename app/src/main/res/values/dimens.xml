@@ -5,11 +5,11 @@
     <dimen name="space_row_v">12dp</dimen>
     <dimen name="row_min_one_line">56dp</dimen>
     <dimen name="radius_card">12dp</dimen>
-    <dimen name="banner_height">44dp</dimen>
+    <dimen name="banner_height">58dp</dimen>
     <dimen name="list_bottom_clearance">96dp</dimen>
     <dimen name="title_row_height">56dp</dimen>
     <dimen name="empty_top">96dp</dimen>
-    <dimen name="empty_art_width">200dp</dimen>
+    <dimen name="empty_art_width">186dp</dimen>
     <dimen name="empty_body_max_width">280dp</dimen>
     <dimen name="fab_scroll_threshold">16dp</dimen>
     <dimen name="row_min_two_line">72dp</dimen>
@@ -37,4 +37,10 @@
     <dimen name="swipe_content_inset">20dp</dimen>
     <dimen name="swipe_icon_gap">8dp</dimen>
     <dimen name="swipe_label_size">14sp</dimen>
+
+    <!-- Slice 4 -->
+    <dimen name="caught_up_art_width">120dp</dimen>
+    <dimen name="caught_up_padding_v">24dp</dimen>
+    <dimen name="summary_padding_v">4dp</dimen>
+    <dimen name="overdue_icon_gap">4dp</dimen>
 </resources>

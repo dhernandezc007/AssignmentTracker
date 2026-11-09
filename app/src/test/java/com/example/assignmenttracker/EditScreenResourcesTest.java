@@ -98,11 +98,14 @@ public class EditScreenResourcesTest {
     /** DES-1-4: rows are tappable with a ripple and a focus state, and the list highlight is back. */
     @Test
     public void rowsHaveARippleAndFocusState() throws Exception {
-        Element row = parse(new File(RES, "layout/item_assignment.xml")).getDocumentElement();
+        // QA-3-1 (Slice 4): the tap/focus target is the row body; the card root clips it.
+        Document doc = parse(new File(RES, "layout/item_assignment.xml"));
+        Element root = doc.getDocumentElement();
+        Element row = byId(doc, "rowBody");
         assertEquals("true", row.getAttributeNS(A, "clickable"));
         assertEquals("true", row.getAttributeNS(A, "focusable"));
         assertEquals("?attr/selectableItemBackground", row.getAttributeNS(A, "foreground"));
-        assertEquals("ripple clipped to the row shape", "true", row.getAttributeNS(A, "clipToOutline"));
+        assertEquals("ripple clipped to the row shape", "true", root.getAttributeNS(A, "clipToOutline"));
         Element list = byId(parse(new File(RES, "layout/activity_main.xml")), "list");
         assertFalse("list focus highlight must not be disabled",
                 list.hasAttributeNS(A, "defaultFocusHighlightEnabled"));

@@ -59,7 +59,7 @@ public class MainActivityTest {
             EditScreenWaits.settled(true);
             onView(withId(R.id.btnSave)).perform(click());
 
-            assertTrue("the list holds the new row", EditScreenWaits.eventually(() -> firstType(s) == HomeItem.TYPE_ROW));
+            assertTrue("the list holds the new row", EditScreenWaits.eventually(() -> firstRow(s) >= 0));
             onView(withText("Essay outline")).check(matches(isDisplayed()));
             onView(withText("English 101")).check(matches(isDisplayed()));
             assertEquals(1, TestDb.count());
@@ -70,10 +70,11 @@ public class MainActivityTest {
     public void rowWithoutACourseHidesLineTwo() {
         TestDb.insert(Assignment.newTodo("a", "Quiz", 1));
         try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
-            assertTrue(EditScreenWaits.eventually(() -> firstType(s) == HomeItem.TYPE_ROW));
+            assertTrue(EditScreenWaits.eventually(() -> firstRow(s) >= 0));
+            int pos = firstRow(s);
             s.onActivity(a -> {
                 RecyclerView list = a.findViewById(R.id.list);
-                View row = list.getChildAt(0);
+                View row = list.findViewHolderForAdapterPosition(pos).itemView;
                 assertEquals(View.GONE, row.findViewById(R.id.rowMeta).getVisibility());
             });
         }
@@ -127,8 +128,9 @@ public class MainActivityTest {
                     RecyclerView list = act.findViewById(R.id.list);
                     com.example.assignmenttracker.ui.assignments.AssignmentListAdapter ad =
                             (com.example.assignmenttracker.ui.assignments.AssignmentListAdapter) list.getAdapter();
-                    if (ad != null && ad.getItemCount() == 1 && ad.getCurrentList().get(0).getAssignment() != null) {
-                        t[0] = ad.getCurrentList().get(0).getAssignment().title;
+                    if (ad == null) return;
+                    for (HomeItem i : ad.getCurrentList()) {
+                        if (i.getType() == HomeItem.TYPE_ROW) t[0] = i.getAssignment().title;
                     }
                 });
                 return "Lab report v2".equals(t[0]);
@@ -146,7 +148,11 @@ public class MainActivityTest {
             onView(withText("Lab report")).perform(click());
             EditScreenWaits.settled(false);
             onView(withId(R.id.etTitle)).perform(replaceText("Should not be saved"));
+            // QA-4-1: keyboard down and the screen still before the tap on ✕, then wait for Home.
+            closeSoftKeyboard();
+            EditScreenWaits.settled(false);
             onView(withContentDescription(R.string.edit_close_cd)).perform(click());
+            EditScreenWaits.backOnHome();
 
             onView(withText("Lab report")).check(matches(isDisplayed()));
             onView(withText("Should not be saved")).check(doesNotExist());
@@ -180,25 +186,34 @@ public class MainActivityTest {
             onView(withId(R.id.fabAdd)).perform(click());
             EditScreenWaits.settled(true);
             onView(withId(R.id.etTitle)).perform(replaceText("Draft I gave up on"));
+            // QA-4-1: keyboard down and the screen still before the tap on ✕, then wait for Home.
+            closeSoftKeyboard();
+            EditScreenWaits.settled(false);
             onView(withContentDescription(R.string.edit_close_cd)).perform(click());
+            EditScreenWaits.backOnHome();
 
             onView(withText(R.string.empty_title)).check(matches(isDisplayed()));
             assertEquals(0, TestDb.count());
         }
     }
 
-    /** DES-1-4: rows are focusable and clickable so a keyboard user can reach and open them. */
+    /**
+     * DES-1-4: rows are focusable and clickable so a keyboard user can reach and open them.
+     * Slice 4 (QA-3-1): the focus/tap target is the row body inside the card.
+     */
     @Test
     public void rowsAreFocusableAndClickable() {
         TestDb.insert(Assignment.newTodo("a", "Quiz", 1));
         try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
-            assertTrue(EditScreenWaits.eventually(() -> firstType(s) == HomeItem.TYPE_ROW));
+            assertTrue(EditScreenWaits.eventually(() -> firstRow(s) >= 0));
+            int pos = firstRow(s);
             s.onActivity(a -> {
-                View row = ((RecyclerView) a.findViewById(R.id.list)).getChildAt(0);
+                View card = ((RecyclerView) a.findViewById(R.id.list)).findViewHolderForAdapterPosition(pos).itemView;
+                View row = card.findViewById(R.id.rowBody);
                 assertTrue(row.isFocusable());
                 assertTrue(row.isClickable());
                 assertNotNull("ripple / focus state", row.getForeground());
-                assertTrue("ripple clipped to the row shape", row.getClipToOutline());
+                assertTrue("ripple clipped to the row shape", card.getClipToOutline());
             });
         }
     }
@@ -261,11 +276,18 @@ public class MainActivityTest {
         }
     }
 
-    private static int firstType(ActivityScenario<MainActivity> s) {
+    /** Adapter position of the first assignment row, or -1. */
+    private static int firstRow(ActivityScenario<MainActivity> s) {
         int[] t = {-1};
         s.onActivity(a -> {
             RecyclerView.Adapter<?> ad = ((RecyclerView) a.findViewById(R.id.list)).getAdapter();
-            t[0] = ad != null && ad.getItemCount() > 0 ? ad.getItemViewType(0) : -1;
+            if (ad == null) return;
+            for (int i = 0; i < ad.getItemCount(); i++) {
+                if (ad.getItemViewType(i) == HomeItem.TYPE_ROW) {
+                    t[0] = i;
+                    return;
+                }
+            }
         });
         return t[0];
     }

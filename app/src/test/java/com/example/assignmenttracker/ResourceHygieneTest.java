@@ -53,13 +53,13 @@ public class ResourceHygieneTest {
         }
     }
 
-    /** QA-1-4: until Slice 4 adds due dates, the empty state must not mention them. */
+    /** QA-1-4, reversed in Slice 4: due dates exist now, so the empty state says they're optional (§11.1). */
     @Test
-    public void emptyStateDoesNotPromiseDueDatesYet() throws Exception {
+    public void emptyStateSaysTheDueDateIsOptional() throws Exception {
         String en = strings(new File(RES, "values/strings.xml"), false).get("empty_body");
         String es = strings(new File(RES, "values-es/strings.xml"), false).get("empty_body");
-        assertFalse("EN empty_body mentions a due date: " + en, en.toLowerCase().contains("due date"));
-        assertFalse("ES empty_body mentions a due date: " + es, es.toLowerCase().contains("fecha"));
+        assertTrue("EN empty_body: " + en, en.endsWith("A due date is optional."));
+        assertTrue("ES empty_body: " + es, es.endsWith("La fecha de entrega es opcional."));
     }
 
     @Test

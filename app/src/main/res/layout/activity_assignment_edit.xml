@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Add / Edit, design.md §5 (Slice 2: no due date field yet; it arrives in Slice 4 between
-    Course and Notes). Insets: SystemBarInsets pads the root for the system bars and turns the
+    Add / Edit, design.md §5: Title, Course, Due date (Slice 4), Notes. Insets: SystemBarInsets pads the root for the system bars and turns the
     keyboard into a bottom margin, so Save rides above the IME (§5.1).
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -84,6 +83,36 @@
                     android:maxLength="60"
                     android:maxLines="1"
                     android:nextFocusForward="@id/etNotes" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Due date (Slice 4, design.md §5.2): read-only; a tap opens the picker, the end
+                 ✕ (shown only when a date is set) clears it. Text is set by the activity.
+                 Focusable for a hardware keyboard (Enter opens the picker) but never in touch
+                 mode, so a tap doesn't place a cursor or raise the IME. -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilDue"
+                style="@style/Widget.AT.TextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_screen"
+                android:hint="@string/field_due"
+                app:endIconContentDescription="@string/field_due_clear_cd"
+                app:endIconDrawable="@drawable/ic_close"
+                app:endIconMode="custom"
+                app:endIconTint="?attr/colorOnSurfaceVariant"
+                app:startIconDrawable="@drawable/ic_event"
+                app:startIconTint="?attr/colorOnSurfaceVariant">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:inputType="none"
+                    android:longClickable="false" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- The counter is turned on in code only past 1800 characters (design.md §5.2). -->

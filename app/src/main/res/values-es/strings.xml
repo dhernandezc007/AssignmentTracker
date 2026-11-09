@@ -35,11 +35,11 @@
     <string name="home_title">Tareas</string>
     <string name="fab_add">Agregar tarea</string>
     <string name="empty_title">Todavía no hay tareas</string>
-    <string name="empty_body">Toca Agregar tarea para anotar la primera.</string>
+    <string name="empty_body">Toca Agregar tarea para anotar la primera. La fecha de entrega es opcional.</string>
     <string name="error_save">No se pudo guardar. Inténtalo de nuevo.</string>
 
     <!-- Fila (design.md §3.1) -->
-    <string name="meta_separator">" · "</string>
+    <string name="meta_separator">" ·\u00A0"</string>
     <!-- TalkBack: "Toca dos veces para editar" -->
     <string name="action_edit">editar</string>
 
@@ -68,4 +68,54 @@
     <!-- Deshacer después de marcar como hecha (Propuesta 1, aprobada 2026-11-09) -->
     <string name="snackbar_marked_done">Marcada como hecha</string>
     <string name="action_undo">Deshacer</string>
+
+    <!-- Fechas de entrega e inicio (design.md §3.1–§3.4, §5.2, §11; Slice 4) -->
+    <string name="summary_separator">" ·\u00A0"</string>
+    <string name="summary_separator_spoken">", "</string>
+    <string name="caught_up_title">Todo al día</string>
+    <string name="section_overdue">Vencidas</string>
+    <string name="section_today">Hoy</string>
+    <string name="section_this_week">Esta semana</string>
+    <string name="section_later">Más adelante</string>
+    <string name="section_no_date">Sin fecha</string>
+    <string name="due_overdue">Vencida ·\u00A0%1$s</string>
+    <string name="due_overdue_spoken">Vencida, %1$s</string>
+    <string name="due_today">Vence hoy</string>
+    <string name="due_tomorrow">Vence mañana</string>
+    <string name="field_due">Fecha de entrega</string>
+    <string name="field_due_empty">Sin fecha de entrega</string>
+    <string name="field_due_clear_cd">Quitar fecha de entrega</string>
+    <string name="date_picker_title">Elige la fecha de entrega</string>
+
+    <!-- "many" repite "other" para que lint MissingQuantity quede limpio (design.md §11.2). -->
+    <plurals name="summary_overdue">
+        <item quantity="one">%d vencida</item>
+        <item quantity="many">%d vencidas</item>
+        <item quantity="other">%d vencidas</item>
+    </plurals>
+    <plurals name="summary_due_today">
+        <item quantity="one">%d vence hoy</item>
+        <item quantity="many">%d vencen hoy</item>
+        <item quantity="other">%d vencen hoy</item>
+    </plurals>
+    <plurals name="summary_due_week">
+        <item quantity="one">%d vence esta semana</item>
+        <item quantity="many">%d vencen esta semana</item>
+        <item quantity="other">%d vencen esta semana</item>
+    </plurals>
+    <plurals name="summary_nothing_this_week">
+        <item quantity="one">Nada vence esta semana ·\u00A0%d pendiente</item>
+        <item quantity="many">Nada vence esta semana ·\u00A0%d pendientes</item>
+        <item quantity="other">Nada vence esta semana ·\u00A0%d pendientes</item>
+    </plurals>
+    <plurals name="caught_up_body">
+        <item quantity="one">Nada pendiente. %d hecha.</item>
+        <item quantity="many">Nada pendiente. %d hechas.</item>
+        <item quantity="other">Nada pendiente. %d hechas.</item>
+    </plurals>
+    <plurals name="section_header_cd">
+        <item quantity="one">%1$s, %2$d tarea</item>
+        <item quantity="many">%1$s, %2$d tareas</item>
+        <item quantity="other">%1$s, %2$d tareas</item>
+    </plurals>
 </resources>

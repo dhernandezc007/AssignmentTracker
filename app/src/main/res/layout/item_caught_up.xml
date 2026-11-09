@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    All caught up, design.md §3.4: replaces the summary when nothing is open but done items
+    exist. The one centered moment on the screen. No confetti, no animation.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/caughtUp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/space_screen"
+    android:paddingTop="@dimen/caught_up_padding_v"
+    android:paddingEnd="@dimen/space_screen"
+    android:paddingBottom="@dimen/caught_up_padding_v">
+
+    <ImageView
+        android:id="@+id/caughtUpArt"
+        android:layout_width="@dimen/caught_up_art_width"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:importantForAccessibility="no"
+        android:src="@drawable/art_flags" />
+
+    <TextView
+        android:id="@+id/caughtUpTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_screen"
+        android:gravity="center"
+        android:text="@string/caught_up_title"
+        android:textAppearance="@style/TextAppearance.AT.StateTitle.CaughtUp" />
+
+    <TextView
+        android:id="@+id/caughtUpBody"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AT.RowMeta"
+        tools:text="Nothing open. 3 done." />
+</LinearLayout>

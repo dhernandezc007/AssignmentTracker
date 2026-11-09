@@ -174,6 +174,44 @@ public class AssignmentEditViewModelTest {
         return a;
     }
 
+    // ---- Slice 4: the optional due date (design.md §5.2) ----
+
+    @Test
+    public void newItemHasNoDueDateAndSavesNone() {
+        AssignmentEditViewModel vm = newVm();
+        assertNull(vm.getDueAt().getValue());
+        vm.save("Quiz", null, null);
+        assertNull(repo.inserted.get(0).dueAt);
+    }
+
+    @Test
+    public void aPickedDueDateIsSavedOnInsert() {
+        AssignmentEditViewModel vm = newVm();
+        vm.setDueAt(5_000L);
+        assertEquals(Long.valueOf(5_000L), vm.getDueAt().getValue());
+        vm.save("Quiz", null, null);
+        assertEquals(Long.valueOf(5_000L), repo.inserted.get(0).dueAt);
+    }
+
+    @Test
+    public void clearingTheDueDateSavesNull() {
+        repo.byId.setValue(existing());
+        AssignmentEditViewModel vm = editVm("abc");
+        vm.setDueAt(5_000L);
+        vm.setDueAt(null);
+        vm.save("Lab report", null, null);
+        assertNull("dueAt cleared in the update", repo.updates.get(0)[5]);
+    }
+
+    @Test
+    public void editSaveWritesTheDueDate() {
+        repo.byId.setValue(existing());
+        AssignmentEditViewModel vm = editVm("abc");
+        vm.setDueAt(8_000L);
+        vm.save("Lab report", null, null);
+        assertEquals(8_000L, repo.updates.get(0)[5]);
+    }
+
     private static String repeat(char c, int n) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < n; i++) sb.append(c);
@@ -209,8 +247,9 @@ public class AssignmentEditViewModelTest {
 
         @Override
         public void updateFields(@NonNull String id, @NonNull String title, @Nullable String course,
-                                 @Nullable String notes, long updatedAt, @NonNull WriteCallback done) {
-            updates.add(new Object[]{id, title, course, notes, updatedAt});
+                                 @Nullable String notes, @Nullable Long dueAt, long updatedAt,
+                                 @NonNull WriteCallback done) {
+            updates.add(new Object[]{id, title, course, notes, updatedAt, dueAt});
             pending.add(done);
         }
 

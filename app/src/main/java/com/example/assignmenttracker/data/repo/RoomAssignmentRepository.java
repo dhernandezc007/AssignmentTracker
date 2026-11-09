@@ -62,13 +62,14 @@ public final class RoomAssignmentRepository implements AssignmentRepository {
 
     @Override
     public void updateFields(@NonNull String id, @NonNull String title, @Nullable String course,
-                             @Nullable String notes, long updatedAt, @NonNull WriteCallback done) {
+                             @Nullable String notes, @Nullable Long dueAt, long updatedAt,
+                             @NonNull WriteCallback done) {
         String problem = checkFields(title, course, notes);
         if (problem != null) {
             done.onComplete(new IllegalArgumentException(problem));
             return;
         }
-        runOneRow(() -> dao.updateFields(id, title, course, notes, updatedAt), done);
+        runOneRow(() -> dao.updateFields(id, title, course, notes, dueAt, updatedAt), done);
     }
 
     @Override

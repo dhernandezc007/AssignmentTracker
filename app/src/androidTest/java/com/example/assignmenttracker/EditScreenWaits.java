@@ -74,9 +74,35 @@ public final class EditScreenWaits {
         throw new AssertionError("edit screen never settled (focus, keyboard=" + expectIme + ", stable Save)");
     }
 
+    /**
+     * QA-4-1: waits (up to 15 s, activity launches take 4 to 7 s on the slow emulator) until the
+     * edit screen has finished and Home is resumed with window focus.
+     */
+    public static void backOnHome() {
+        boolean ok = eventually(() -> {
+            boolean[] home = {false};
+            InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+                boolean edit = false;
+                for (Activity a : ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED)) {
+                    if (a instanceof AssignmentEditActivity) edit = true;
+                    if (a instanceof MainActivity && a.getWindow().getDecorView().hasWindowFocus()) home[0] = true;
+                }
+                home[0] &= !edit;
+            });
+            return home[0];
+        }, 15_000);
+        if (!ok) throw new AssertionError("Home never came back after closing the edit screen");
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+    }
+
     /** Polls until {@code check} is true or 5 s pass. */
     public static boolean eventually(java.util.function.BooleanSupplier check) {
-        long deadline = SystemClock.uptimeMillis() + 5_000;
+        return eventually(check, 5_000);
+    }
+
+    /** Polls until {@code check} is true or {@code timeoutMs} pass. */
+    public static boolean eventually(java.util.function.BooleanSupplier check, long timeoutMs) {
+        long deadline = SystemClock.uptimeMillis() + timeoutMs;
         while (SystemClock.uptimeMillis() < deadline) {
             if (check.getAsBoolean()) return true;
             SystemClock.sleep(100);

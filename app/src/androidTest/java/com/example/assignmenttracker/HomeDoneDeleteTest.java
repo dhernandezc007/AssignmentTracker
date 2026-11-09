@@ -41,7 +41,11 @@ import org.junit.runner.RunWith;
 import java.util.List;
 import java.util.Map;
 
-/** Slice 3 end to end: mark done (and Undo), the Done section, swipe delete (and Undo). */
+/**
+ * Slice 3 end to end: mark done (and Undo), the Done section, swipe delete (and Undo).
+ * Slice 4: the list starts with the summary and bucket headers, both Undo paths stamp
+ * updatedAt = now (SEC-3-1), and the checkbox is a sibling of the row body (QA-3-1).
+ */
 @RunWith(AndroidJUnit4.class)
 public class HomeDoneDeleteTest {
 
@@ -59,7 +63,8 @@ public class HomeDoneDeleteTest {
         TestDb.insert(quiz);
         TestDb.insert(Assignment.newTodo("r2", "Essay", 1_000L));
         try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
-            waitForItems(s, 2);
+            waitForRows(s, 2);
+            long beforeUndo = System.currentTimeMillis();
             onView(withContentDescription(cd("Quiz"))).perform(click());
 
             assertTrue("DONE in the DB", EditScreenWaits.eventually(() ->
@@ -67,9 +72,10 @@ public class HomeDoneDeleteTest {
             assertNotNull("completedAt set", col("r1", "completedAt"));
             assertTrue("open row, then a collapsed Done header", EditScreenWaits.eventually(() -> {
                 List<HomeItem> items = items(s);
-                return items.size() == 2 && "r2".equals(items.get(0).getAssignment().id)
-                        && items.get(1).getType() == HomeItem.TYPE_DONE_HEADER
-                        && items.get(1).getDoneCount() == 1 && !items.get(1).isExpanded();
+                HomeItem last = items.get(items.size() - 1);
+                return rowIds(items).equals(java.util.Arrays.asList("r2"))
+                        && last.getType() == HomeItem.TYPE_DONE_HEADER
+                        && last.getDoneCount() == 1 && !last.isExpanded();
             }));
 
             onView(withText(R.string.snackbar_marked_done)).check(matches(isDisplayed()));
@@ -78,10 +84,8 @@ public class HomeDoneDeleteTest {
             assertTrue("open again", EditScreenWaits.eventually(() ->
                     Assignment.STATUS_TODO.equals(col("r1", "status"))));
             assertNull("completedAt cleared", col("r1", "completedAt"));
-            assertEquals("updatedAt put back", 2_500L, col("r1", "updatedAt"));
-            assertTrue(EditScreenWaits.eventually(() -> items(s).size() == 2
-                    && items(s).get(0).getType() == HomeItem.TYPE_ROW
-                    && items(s).get(1).getType() == HomeItem.TYPE_ROW));
+            assertTrue("SEC-3-1: Undo writes updatedAt = now", (long) col("r1", "updatedAt") >= beforeUndo);
+            assertTrue(EditScreenWaits.eventually(() -> rowIds(items(s)).size() == 2));
         }
     }
 
@@ -92,14 +96,16 @@ public class HomeDoneDeleteTest {
         d.completedAt = 3_000L;
         TestDb.insert(d);
         try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
-            waitForItems(s, 1);
+            assertTrue("All caught up, then the Done header", EditScreenWaits.eventually(() ->
+                    items(s).size() == 2 && items(s).get(0).getType() == HomeItem.TYPE_CAUGHT_UP));
+            onView(withText(R.string.caught_up_title)).check(matches(isDisplayed()));
             onView(withText("Reading response")).check(doesNotExist());
 
             onView(withText(R.string.section_done)).perform(click());
-            assertTrue(EditScreenWaits.eventually(() -> items(s).size() == 2));
+            assertTrue(EditScreenWaits.eventually(() -> items(s).size() == 3));
             waitStill(R.id.rowCheck);
             s.onActivity(a -> {
-                View row = rowView(a, 1);
+                View row = rowView(a, 2);
                 CheckBox cb = row.findViewById(R.id.rowCheck);
                 assertTrue("checked", cb.isChecked());
                 TextView title = row.findViewById(R.id.rowTitle);
@@ -113,10 +119,14 @@ public class HomeDoneDeleteTest {
             assertTrue("open in the DB", EditScreenWaits.eventually(() ->
                     Assignment.STATUS_TODO.equals(col("d1", "status"))));
             assertNull(col("d1", "completedAt"));
-            assertTrue("back with the open rows; no Done header left", EditScreenWaits.eventually(() ->
-                    items(s).size() == 1 && items(s).get(0).getType() == HomeItem.TYPE_ROW));
+            assertTrue("back with the open rows; no Done header left", EditScreenWaits.eventually(() -> {
+                List<HomeItem> l = items(s);
+                return l.size() == 3 && l.get(0).getType() == HomeItem.TYPE_SUMMARY
+                        && l.get(2).getType() == HomeItem.TYPE_ROW;
+            }));
+            waitStill(R.id.rowCheck);
             s.onActivity(a -> assertEquals(Color.parseColor("#3E1F0D"),
-                    ((TextView) rowView(a, 0).findViewById(R.id.rowTitle)).getCurrentTextColor()));
+                    ((TextView) rowView(a, 2).findViewById(R.id.rowTitle)).getCurrentTextColor()));
         }
     }
 
@@ -129,7 +139,8 @@ public class HomeDoneDeleteTest {
         TestDb.insert(a);
         Map<String, Object> before = TestDb.fullRow("del-1");
         try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
-            waitForItems(s, 1);
+            waitForRows(s, 1);
+            long beforeUndo = System.currentTimeMillis();
             onView(withText("Lab report: enzyme activity")).perform(swipeLeft());
 
             assertTrue("deleted", EditScreenWaits.eventually(() -> TestDb.count() == 0));
@@ -137,9 +148,11 @@ public class HomeDoneDeleteTest {
             clickUndo();
 
             assertTrue("restored", EditScreenWaits.eventually(() -> TestDb.count() == 1));
-            assertEquals("same id and every field", before, TestDb.fullRow("del-1"));
-            assertTrue(EditScreenWaits.eventually(() -> items(s).size() == 1
-                    && "del-1".equals(items(s).get(0).getAssignment().id)));
+            Map<String, Object> after = TestDb.fullRow("del-1");
+            assertTrue("SEC-3-1: Undo writes updatedAt = now", (long) after.get("updatedAt") >= beforeUndo);
+            after.put("updatedAt", before.get("updatedAt"));
+            assertEquals("same id and every other field", before, after);
+            assertTrue(EditScreenWaits.eventually(() -> rowIds(items(s)).equals(java.util.Arrays.asList("del-1"))));
         }
     }
 
@@ -147,7 +160,7 @@ public class HomeDoneDeleteTest {
     public void aDeletedRowIsGoneAfterRelaunchWithoutUndo() {
         TestDb.insert(Assignment.newTodo("gone", "Quiz 3 study guide", 1_000L));
         try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
-            waitForItems(s, 1);
+            waitForRows(s, 1);
             onView(withText("Quiz 3 study guide")).perform(swipeRight());
             assertTrue(EditScreenWaits.eventually(() -> TestDb.count() == 0));
         }
@@ -163,9 +176,9 @@ public class HomeDoneDeleteTest {
     public void deleteAccessibilityActionDeletesAndOffersUndo() {
         TestDb.insert(Assignment.newTodo("a1", "Group presentation slides", 1_000L));
         try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
-            waitForItems(s, 1);
+            waitForRows(s, 1);
             s.onActivity(a -> {
-                View row = rowView(a, 0);
+                View row = rowView(a, 2).findViewById(R.id.rowBody);
                 int id = actionId(row, ctx.getString(R.string.action_delete));
                 assertTrue("row offers Delete", id != -1);
                 assertTrue(ViewCompat.performAccessibilityAction(row, id, null));
@@ -180,15 +193,27 @@ public class HomeDoneDeleteTest {
     public void checkboxReadsTheTitleAndStateAndTextStartsAt52dp() {
         TestDb.insert(Assignment.newTodo("c1", "Calc problem set 7", 1_000L));
         try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
-            waitForItems(s, 1);
+            waitForRows(s, 1);
             s.onActivity(a -> {
-                View row = rowView(a, 0);
+                View row = rowView(a, 2);
                 CheckBox cb = row.findViewById(R.id.rowCheck);
                 assertEquals("Done: Calc problem set 7", cb.getContentDescription().toString());
                 AccessibilityNodeInfo info = cb.createAccessibilityNodeInfo();
                 assertTrue(info.isCheckable());
                 assertFalse(info.isChecked());
                 assertTrue("checkbox is its own focus stop", cb.isFocusable());
+                // QA-3-1: the checkbox and the focusable body are siblings, checkbox first, under a
+                // card root that isn't focusable, so TalkBack visits the checkbox first.
+                View body = row.findViewById(R.id.rowBody);
+                assertTrue(body.isFocusable());
+                assertFalse("card root is not a focus stop", row.isFocusable());
+                android.view.ViewGroup parent = (android.view.ViewGroup) cb.getParent();
+                assertEquals("siblings", parent, body.getParent());
+                assertTrue("checkbox first", parent.indexOfChild(cb) < parent.indexOfChild(body));
+                assertTrue("the body holds the Delete action",
+                        actionId(body, a.getString(R.string.action_delete)) != -1);
+                assertEquals("checkbox has no Delete of its own", -1,
+                        actionId(cb, a.getString(R.string.action_delete)));
                 float dp = a.getResources().getDisplayMetrics().density;
                 assertEquals(Math.round(48 * dp), cb.getWidth());
                 assertEquals(Math.round(48 * dp), cb.getHeight());
@@ -211,9 +236,9 @@ public class HomeDoneDeleteTest {
         d.completedAt = 2_000L;
         TestDb.insert(d);
         try (ActivityScenario<MainActivity> s = ActivityScenario.launch(MainActivity.class)) {
-            waitForItems(s, 1);
+            waitForItems(s, 2);
             s.onActivity(a -> {
-                View h = rowView(a, 0);
+                View h = rowView(a, 1);
                 assertTrue(ViewCompat.isAccessibilityHeading(h));
                 assertEquals(a.getString(R.string.done_header_cd_collapsed, 1), h.getContentDescription().toString());
                 if (Build.VERSION.SDK_INT >= 30) {
@@ -223,9 +248,9 @@ public class HomeDoneDeleteTest {
                         ((TextView) h.findViewById(R.id.doneCount)).getText().toString());
             });
             onView(withText(R.string.section_done)).perform(click());
-            assertTrue(EditScreenWaits.eventually(() -> items(s).size() == 2));
+            assertTrue(EditScreenWaits.eventually(() -> items(s).size() == 3));
             s.onActivity(a -> {
-                View h = rowView(a, 0);
+                View h = rowView(a, 1);
                 assertEquals(a.getString(R.string.done_header_cd_expanded, 1), h.getContentDescription().toString());
                 if (Build.VERSION.SDK_INT >= 30) {
                     assertEquals(a.getString(R.string.state_expanded), String.valueOf(ViewCompat.getStateDescription(h)));
@@ -251,6 +276,19 @@ public class HomeDoneDeleteTest {
                 .getAdapter()).getCurrentList());
         @SuppressWarnings("unchecked") List<HomeItem> l = (List<HomeItem>) out[0];
         return l;
+    }
+
+    /** Assignment ids of the ROW items, in list order. */
+    static List<String> rowIds(List<HomeItem> items) {
+        List<String> out = new java.util.ArrayList<>();
+        for (HomeItem i : items) if (i.getType() == HomeItem.TYPE_ROW) out.add(i.getAssignment().id);
+        return out;
+    }
+
+    /** Waits until the list shows {@code n} assignment rows. */
+    private static void waitForRows(ActivityScenario<MainActivity> s, int n) {
+        assertTrue("list has " + n + " rows", EditScreenWaits.eventually(() -> rowIds(items(s)).size() == n));
+        SystemClock.sleep(300); // let the first layout and item animations finish
     }
 
     private static void waitForItems(ActivityScenario<MainActivity> s, int n) {

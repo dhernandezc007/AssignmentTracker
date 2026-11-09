@@ -36,7 +36,8 @@ public interface AssignmentRepository {
      * error if the id no longer exists.
      */
     void updateFields(@NonNull String id, @NonNull String title, @Nullable String course,
-                      @Nullable String notes, long updatedAt, @NonNull WriteCallback done);
+                      @Nullable String notes, @Nullable Long dueAt, long updatedAt,
+                      @NonNull WriteCallback done);
 
     /**
      * Sets status, completedAt and updatedAt (mark done, reopen, undo). {@code completedAt} is

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Row, design.md §3.1, Slice 3: checkbox at the start, then title plus line 2 (course, hidden
-    when empty). No due label yet (Slice 4). Two separate targets that never overlap: the
-    48dp checkbox (mark done) and the rest of the row (open Add/Edit). The row is one focusable
-    node whose TextViews are read with it; the checkbox is its own focus stop, first in order.
-    The ripple and focus state (DES-1-4) are the foreground, clipped to the bg_row_* shape by
-    clipToOutline. The background (bg_row_*), the rule and the min height are set by the adapter.
+    Row, design.md §3.1. The card root (bg_row_*, clipToOutline) is not focusable. Inside it the
+    48dp checkbox (mark done) and the row body (open Add/Edit) are siblings, checkbox first, so
+    TalkBack reaches the checkbox before the body (QA-3-1, DES-3-4, §10). The two targets never
+    overlap. The body is one focusable node whose content description the adapter sets (title,
+    course, spoken due label); its ripple and focus state are its foreground, clipped to the card
+    corners by the root. The background, the rule, the min height and line 2 are set by the adapter.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,22 +16,16 @@
     android:layout_marginStart="@dimen/space_screen"
     android:layout_marginEnd="@dimen/space_screen"
     android:background="@drawable/bg_row_single"
-    android:clickable="true"
     android:clipToOutline="true"
-    android:focusable="true"
-    android:foreground="?attr/selectableItemBackground"
     android:orientation="vertical"
     tools:targetApi="31">
 
     <LinearLayout
-        android:id="@+id/rowBody"
+        android:id="@+id/rowContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:minHeight="@dimen/row_min_one_line"
-        android:orientation="horizontal"
-        android:paddingStart="0dp"
-        android:paddingEnd="@dimen/space_screen">
+        android:orientation="horizontal">
 
         <!-- 48dp target, 4dp in: the 18dp box sits about 19dp from the card edge (§3.1).
              Content description ("Done: <title>") is set per row by the adapter. -->
@@ -45,18 +39,26 @@
             app:buttonTint="@color/checkbox_tint" />
 
         <LinearLayout
-            android:id="@+id/rowText"
+            android:id="@+id/rowBody"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/row_min_one_line"
             android:orientation="vertical"
+            android:paddingStart="0dp"
             android:paddingTop="@dimen/space_row_v"
+            android:paddingEnd="@dimen/space_screen"
             android:paddingBottom="@dimen/space_row_v">
 
             <TextView
                 android:id="@+id/rowTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:breakStrategy="balanced"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textAppearance="@style/TextAppearance.AT.RowTitle"
@@ -70,7 +72,7 @@
                 android:maxLines="2"
                 android:textAppearance="@style/TextAppearance.AT.RowMeta"
                 android:visibility="gone"
-                tools:text="Biology 101"
+                tools:text="Overdue · Thu, Nov 6 · Biology 101"
                 tools:visibility="visible" />
         </LinearLayout>
     </LinearLayout>

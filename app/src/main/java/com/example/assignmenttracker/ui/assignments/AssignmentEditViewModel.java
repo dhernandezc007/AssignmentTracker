@@ -36,6 +36,8 @@ public class AssignmentEditViewModel extends ViewModel {
     @Nullable private final String editId;
     @Nullable private final LiveData<Assignment> original;
     private final MutableLiveData<SaveStatus> saveStatus = new MutableLiveData<>(SaveStatus.IDLE);
+    /** The due date being edited (Slice 4): local start of day, or null for none. */
+    private final MutableLiveData<Long> dueAt = new MutableLiveData<>(null);
 
     public AssignmentEditViewModel(@NonNull AssignmentRepository repository,
                                    @NonNull LongSupplier clock,
@@ -74,7 +76,18 @@ public class AssignmentEditViewModel extends ViewModel {
         saveStatus.setValue(SaveStatus.IDLE);
     }
 
-    /** Validates and starts the write. Main thread. */
+    /** The due date shown in the field; survives rotation with the ViewModel. */
+    @NonNull
+    public LiveData<Long> getDueAt() {
+        return dueAt;
+    }
+
+    /** Picked (local start of day) or cleared (null). */
+    public void setDueAt(@Nullable Long value) {
+        dueAt.setValue(value);
+    }
+
+    /** Validates and starts the write, with the current due date. Main thread. */
     @NonNull
     public SaveResult save(@Nullable CharSequence rawTitle, @Nullable CharSequence rawCourse,
                            @Nullable CharSequence rawNotes) {
@@ -95,9 +108,10 @@ public class AssignmentEditViewModel extends ViewModel {
             Assignment a = Assignment.newTodo(ids.get(), title, now);
             a.course = course;
             a.notes = notes;
+            a.dueAt = dueAt.getValue();
             repository.insert(a, done);
         } else {
-            repository.updateFields(editId, title, course, notes, now, done);
+            repository.updateFields(editId, title, course, notes, dueAt.getValue(), now, done);
         }
         return SaveResult.STARTED;
     }

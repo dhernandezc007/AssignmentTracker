@@ -3,20 +3,20 @@
     Done header, design.md §3.2: serape swatch, "Done", the count, and a chevron at the end.
     The whole row is one tap target (48dp min, full width, ripple) and one accessibility node,
     a heading whose content description and state ("Collapsed" / "Expanded") are set by the
-    adapter. Collapsed on every launch.
+    adapter. Collapsed on every launch. DES-3-5: the swatch is pinned to the label's top, like
+    the bucket headers.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/doneHeader"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:accessibilityHeading="true"
-    android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:gravity="center_vertical"
+    android:foreground="?attr/selectableItemBackground"
     android:minHeight="@dimen/touch_target"
-    android:orientation="horizontal"
     android:paddingStart="@dimen/space_screen"
     android:paddingTop="@dimen/header_padding_top"
     android:paddingEnd="@dimen/space_screen"
@@ -28,7 +28,9 @@
         android:layout_width="@dimen/swatch_width"
         android:layout_height="@dimen/swatch_height"
         android:importantForAccessibility="no"
-        android:src="@drawable/serape_swatch" />
+        android:src="@drawable/serape_swatch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/doneLabel" />
 
     <TextView
         android:id="@+id/doneLabel"
@@ -37,16 +39,25 @@
         android:layout_marginStart="@dimen/swatch_gap"
         android:importantForAccessibility="no"
         android:text="@string/section_done"
-        android:textAppearance="@style/TextAppearance.AT.SectionLabel" />
+        android:textAppearance="@style/TextAppearance.AT.SectionLabel"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/doneCount"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@id/doneSwatch"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/doneCount"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/header_count_gap"
-        android:layout_weight="1"
         android:importantForAccessibility="no"
         android:textAppearance="@style/TextAppearance.AT.SectionCount"
+        app:layout_constraintBaseline_toBaselineOf="@id/doneLabel"
+        app:layout_constraintEnd_toStartOf="@id/doneChevron"
+        app:layout_constraintStart_toEndOf="@id/doneLabel"
         tools:text="3" />
 
     <ImageView
@@ -54,5 +65,8 @@
         android:layout_width="@dimen/icon_size"
         android:layout_height="@dimen/icon_size"
         android:importantForAccessibility="no"
-        android:src="@drawable/ic_expand_more" />
-</LinearLayout>
+        android:src="@drawable/ic_expand_more"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

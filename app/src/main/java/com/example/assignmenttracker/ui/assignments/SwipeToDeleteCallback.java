@@ -23,8 +23,8 @@ import com.google.android.material.color.MaterialColors;
 /**
  * Swipe either way to delete a row (design.md §4). Only rows swipe. While swiping, the gap
  * behind the row is filled with {@code colorError} and shows the white trash icon and "Delete"
- * 20dp in from the side being revealed, clipped to the row's card corners. The row slides;
- * nothing fades.
+ * 20dp in from the side being revealed, clipped to the row's card corners. The label appears
+ * only when it fits whole (DES-3-1). The row slides; nothing fades.
  */
 public final class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
@@ -101,16 +101,19 @@ public final class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback 
             int iconTop = (int) (bounds.centerY() - ih / 2f);
             float textW = label.measureText(deleteText);
             float baseline = bounds.centerY() - (label.descent() + label.ascent()) / 2f;
+            // DES-3-1: a label cut off by the sliding row reads as a fragment, so draw it only
+            // once the whole group fits; until then the icon is alone.
+            boolean withLabel = SwipeLabel.fits(dX, inset, iw, gap, textW);
             if (dX > 0) { // revealing the left side
                 int left = row.getLeft() + inset;
                 icon.setBounds(left, iconTop, left + iw, iconTop + ih);
                 icon.draw(c);
-                c.drawText(deleteText, left + iw + gap, baseline, label);
+                if (withLabel) c.drawText(deleteText, left + iw + gap, baseline, label);
             } else { // revealing the right side
                 int right = row.getRight() - inset;
                 icon.setBounds(right - iw, iconTop, right, iconTop + ih);
                 icon.draw(c);
-                c.drawText(deleteText, right - iw - gap - textW, baseline, label);
+                if (withLabel) c.drawText(deleteText, right - iw - gap - textW, baseline, label);
             }
             c.restoreToCount(save);
         }

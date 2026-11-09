@@ -164,7 +164,7 @@ public class RoomAssignmentRepositoryTest {
     @Nullable
     private Throwable update(String id, String title, @Nullable String course, @Nullable String notes) {
         AtomicReference<Throwable> out = new AtomicReference<>(new AssertionError("callback never ran"));
-        repo.updateFields(id, title, course, notes, 9L, out::set);
+        repo.updateFields(id, title, course, notes, null, 9L, out::set);
         return out.get();
     }
 
@@ -213,7 +213,8 @@ public class RoomAssignmentRepositoryTest {
         }
 
         @Override
-        public int updateFields(String id, String title, @Nullable String course, @Nullable String notes, long updatedAt) {
+        public int updateFields(String id, String title, @Nullable String course, @Nullable String notes,
+                                @Nullable Long dueAt, long updatedAt) {
             if (fail != null) throw fail;
             updateCalls++;
             return rowsChanged;

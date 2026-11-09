@@ -1,23 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- design.md §3.5: five of Danny's flags on a string, for the empty and all-caught-up states. -->
+<!-- Empty and all-caught-up art: 5 flags from the same string.
+     Generated from design.md §2.1 (Direction A). Flag = outline + cut-outs in ONE path, fillType=evenOdd. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="200dp"
-    android:height="44dp"
-    android:viewportWidth="200"
-    android:viewportHeight="44">
+    android:width="186dp"
+    android:height="58dp"
+    android:viewportWidth="186"
+    android:viewportHeight="58">
 
     <path
-        android:pathData="M0,5 L200,5"
+        android:pathData="M0,6 Q93,12 186,6"
         android:strokeColor="@color/mx_brown"
         android:strokeWidth="1.5" />
-    <path android:fillColor="@color/mx_pink"
-        android:pathData="M2,6 H38 V38 L29,32 L20,38 L11,32 L2,38 Z" />
-    <path android:fillColor="@color/mx_marigold"
-        android:pathData="M42,6 H78 V38 L69,32 L60,38 L51,32 L42,38 Z" />
-    <path android:fillColor="@color/mx_turquoise"
-        android:pathData="M82,6 H118 V38 L109,32 L100,38 L91,32 L82,38 Z" />
-    <path android:fillColor="@color/mx_green"
-        android:pathData="M122,6 H158 V38 L149,32 L140,38 L131,32 L122,38 Z" />
-    <path android:fillColor="@color/mx_purple"
-        android:pathData="M162,6 H198 V38 L189,32 L180,38 L171,32 L162,38 Z" />
+    <group android:translateX="4" android:translateY="7" android:rotation="-1.4" android:pivotX="17" android:pivotY="0">
+        <path android:fillColor="@color/mx_pink" android:fillType="evenOdd"
+            android:pathData="M0,0 H34 V40 L30.6,45 L27.2,40 L23.8,45 L20.4,40 L17,45 L13.6,40 L10.2,45 L6.8,40 L3.4,45 L0,40 Z M14.4,19 a2.6,2.6 0 1,0 5.2,0 a2.6,2.6 0 1,0 -5.2,0 Z M15,12.6 a2,3.4 0 1,0 4,0 a2,3.4 0 1,0 -4,0 Z M15,25.4 a2,3.4 0 1,0 4,0 a2,3.4 0 1,0 -4,0 Z M7.2,19 a3.4,2 0 1,0 6.8,0 a3.4,2 0 1,0 -6.8,0 Z M20,19 a3.4,2 0 1,0 6.8,0 a3.4,2 0 1,0 -6.8,0 Z M8,9.5 l2,-2 l2,2 l-2,2 Z M22,9.5 l2,-2 l2,2 l-2,2 Z M8,28.5 l2,-2 l2,2 l-2,2 Z M22,28.5 l2,-2 l2,2 l-2,2 Z M4,34 h3 v2 h-3 Z M9.5,34 h3 v2 h-3 Z M15.5,34 h3 v2 h-3 Z M21.5,34 h3 v2 h-3 Z M27,34 h3 v2 h-3 Z M3.4,5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z M28.4,5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" />
+    </group>
+    <group android:translateX="40" android:translateY="9" android:rotation="0" android:pivotX="17" android:pivotY="0">
+        <path android:fillColor="@color/mx_marigold" android:fillType="evenOdd"
+            android:pathData="M0,0 H34 V40 L30.6,45 L27.2,40 L23.8,45 L20.4,40 L17,45 L13.6,40 L10.2,45 L6.8,40 L3.4,45 L0,40 Z M14.4,19 a2.6,2.6 0 1,0 5.2,0 a2.6,2.6 0 1,0 -5.2,0 Z M15,12.6 a2,3.4 0 1,0 4,0 a2,3.4 0 1,0 -4,0 Z M15,25.4 a2,3.4 0 1,0 4,0 a2,3.4 0 1,0 -4,0 Z M7.2,19 a3.4,2 0 1,0 6.8,0 a3.4,2 0 1,0 -6.8,0 Z M20,19 a3.4,2 0 1,0 6.8,0 a3.4,2 0 1,0 -6.8,0 Z M8,9.5 l2,-2 l2,2 l-2,2 Z M22,9.5 l2,-2 l2,2 l-2,2 Z M8,28.5 l2,-2 l2,2 l-2,2 Z M22,28.5 l2,-2 l2,2 l-2,2 Z M4,34 h3 v2 h-3 Z M9.5,34 h3 v2 h-3 Z M15.5,34 h3 v2 h-3 Z M21.5,34 h3 v2 h-3 Z M27,34 h3 v2 h-3 Z M3.4,5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z M28.4,5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" />
+    </group>
+    <group android:translateX="76" android:translateY="7" android:rotation="1.4" android:pivotX="17" android:pivotY="0">
+        <path android:fillColor="@color/mx_turquoise" android:fillType="evenOdd"
+            android:pathData="M0,0 H34 V40 L30.6,45 L27.2,40 L23.8,45 L20.4,40 L17,45 L13.6,40 L10.2,45 L6.8,40 L3.4,45 L0,40 Z M14.4,19 a2.6,2.6 0 1,0 5.2,0 a2.6,2.6 0 1,0 -5.2,0 Z M15,12.6 a2,3.4 0 1,0 4,0 a2,3.4 0 1,0 -4,0 Z M15,25.4 a2,3.4 0 1,0 4,0 a2,3.4 0 1,0 -4,0 Z M7.2,19 a3.4,2 0 1,0 6.8,0 a3.4,2 0 1,0 -6.8,0 Z M20,19 a3.4,2 0 1,0 6.8,0 a3.4,2 0 1,0 -6.8,0 Z M8,9.5 l2,-2 l2,2 l-2,2 Z M22,9.5 l2,-2 l2,2 l-2,2 Z M8,28.5 l2,-2 l2,2 l-2,2 Z M22,28.5 l2,-2 l2,2 l-2,2 Z M4,34 h3 v2 h-3 Z M9.5,34 h3 v2 h-3 Z M15.5,34 h3 v2 h-3 Z M21.5,34 h3 v2 h-3 Z M27,34 h3 v2 h-3 Z M3.4,5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z M28.4,5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" />
+    </group>
+    <group android:translateX="112" android:translateY="9" android:rotation="-1.4" android:pivotX="17" android:pivotY="0">
+        <path android:fillColor="@color/mx_green" android:fillType="evenOdd"
+            android:pathData="M0,0 H34 V40 L30.6,45 L27.2,40 L23.8,45 L20.4,40 L17,45 L13.6,40 L10.2,45 L6.8,40 L3.4,45 L0,40 Z M14.4,19 a2.6,2.6 0 1,0 5.2,0 a2.6,2.6 0 1,0 -5.2,0 Z M15,12.6 a2,3.4 0 1,0 4,0 a2,3.4 0 1,0 -4,0 Z M15,25.4 a2,3.4 0 1,0 4,0 a2,3.4 0 1,0 -4,0 Z M7.2,19 a3.4,2 0 1,0 6.8,0 a3.4,2 0 1,0 -6.8,0 Z M20,19 a3.4,2 0 1,0 6.8,0 a3.4,2 0 1,0 -6.8,0 Z M8,9.5 l2,-2 l2,2 l-2,2 Z M22,9.5 l2,-2 l2,2 l-2,2 Z M8,28.5 l2,-2 l2,2 l-2,2 Z M22,28.5 l2,-2 l2,2 l-2,2 Z M4,34 h3 v2 h-3 Z M9.5,34 h3 v2 h-3 Z M15.5,34 h3 v2 h-3 Z M21.5,34 h3 v2 h-3 Z M27,34 h3 v2 h-3 Z M3.4,5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z M28.4,5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" />
+    </group>
+    <group android:translateX="148" android:translateY="7" android:rotation="0" android:pivotX="17" android:pivotY="0">
+        <path android:fillColor="@color/mx_purple" android:fillType="evenOdd"
+            android:pathData="M0,0 H34 V40 L30.6,45 L27.2,40 L23.8,45 L20.4,40 L17,45 L13.6,40 L10.2,45 L6.8,40 L3.4,45 L0,40 Z M14.4,19 a2.6,2.6 0 1,0 5.2,0 a2.6,2.6 0 1,0 -5.2,0 Z M15,12.6 a2,3.4 0 1,0 4,0 a2,3.4 0 1,0 -4,0 Z M15,25.4 a2,3.4 0 1,0 4,0 a2,3.4 0 1,0 -4,0 Z M7.2,19 a3.4,2 0 1,0 6.8,0 a3.4,2 0 1,0 -6.8,0 Z M20,19 a3.4,2 0 1,0 6.8,0 a3.4,2 0 1,0 -6.8,0 Z M8,9.5 l2,-2 l2,2 l-2,2 Z M22,9.5 l2,-2 l2,2 l-2,2 Z M8,28.5 l2,-2 l2,2 l-2,2 Z M22,28.5 l2,-2 l2,2 l-2,2 Z M4,34 h3 v2 h-3 Z M9.5,34 h3 v2 h-3 Z M15.5,34 h3 v2 h-3 Z M21.5,34 h3 v2 h-3 Z M27,34 h3 v2 h-3 Z M3.4,5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z M28.4,5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" />
+    </group>
 </vector>

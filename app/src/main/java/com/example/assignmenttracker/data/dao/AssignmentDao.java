@@ -23,10 +23,10 @@ public interface AssignmentDao {
     void insert(Assignment assignment);
 
     /**
-     * Slice 1 order: newest first, so a just-added row shows at the top. Slice 4 replaces
-     * this with the due-date order ({@code status != 'DONE' ORDER BY dueAt IS NULL, dueAt}).
+     * Slice 4 order (tasks.md): due date ascending with no-date rows last, then createdAt and id
+     * so ties are stable. Home splits open and done rows itself (done rows sort by completedAt).
      */
-    @Query("SELECT * FROM assignments ORDER BY createdAt DESC, id")
+    @Query("SELECT * FROM assignments ORDER BY dueAt IS NULL, dueAt, createdAt, id")
     LiveData<List<Assignment>> observeAll();
 
     /** One row for the edit screen; emits null if the id doesn't exist. */
@@ -34,14 +34,15 @@ public interface AssignmentDao {
     LiveData<Assignment> observeById(String id);
 
     /**
-     * The edit save (Slice 2). Only the fields the screen edits change, plus {@code updatedAt};
-     * id, createdAt, status, completedAt and dueAt are kept as they are in the row.
+     * The edit save (Slices 2 and 4). Only the fields the screen edits change (title, course,
+     * notes, dueAt), plus {@code updatedAt}; id, createdAt, status and completedAt are kept.
      *
      * @return the number of rows changed (0 if the id doesn't exist)
      */
     @Query("UPDATE assignments SET title = :title, course = :course, notes = :notes, "
-            + "updatedAt = :updatedAt WHERE id = :id")
-    int updateFields(String id, String title, @Nullable String course, @Nullable String notes, long updatedAt);
+            + "dueAt = :dueAt, updatedAt = :updatedAt WHERE id = :id")
+    int updateFields(String id, String title, @Nullable String course, @Nullable String notes,
+                     @Nullable Long dueAt, long updatedAt);
 
     /**
      * Mark done / reopen / undo (Slice 3). Only status, completedAt and updatedAt change.

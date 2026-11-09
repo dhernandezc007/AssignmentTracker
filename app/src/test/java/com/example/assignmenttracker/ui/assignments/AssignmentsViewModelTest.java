@@ -2,8 +2,10 @@ package com.example.assignmenttracker.ui.assignments;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,8 @@ import androidx.lifecycle.Observer;
 
 import com.example.assignmenttracker.data.entity.Assignment;
 import com.example.assignmenttracker.data.repo.AssignmentRepository;
+import com.example.assignmenttracker.util.DueBucket;
+import com.example.assignmenttracker.util.DueDates;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,10 +26,13 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Home list state. Adding and editing moved to {@link AssignmentEditViewModel} in Slice 2.
  * Slice 3: mark done / undo, delete / restore, and the collapsible Done section.
+ * Slice 4: SEC-3-1 (Undo writes updatedAt = now), QA-3-2 (pending Undo in the ViewModel),
+ * DES-3-3 (announce only a real reopen) and re-bucketing on refresh.
  */
 public class AssignmentsViewModelTest {
 
@@ -33,9 +40,11 @@ public class AssignmentsViewModelTest {
     public InstantTaskExecutorRule instant = new InstantTaskExecutorRule();
 
     private static final long NOW = 1_762_600_000_000L;
+    private static final TimeZone TZ = TimeZone.getTimeZone("America/Chicago");
 
+    private long now = NOW;
     private final FakeRepo repo = new FakeRepo();
-    private final AssignmentsViewModel vm = new AssignmentsViewModel(repo, () -> NOW);
+    private final AssignmentsViewModel vm = new AssignmentsViewModel(repo, () -> now, () -> TZ);
 
     @Test
     public void homeItemsFollowTheRepository() {
@@ -43,20 +52,23 @@ public class AssignmentsViewModelTest {
         repo.data.setValue(new ArrayList<>());
         assertEquals(HomeItem.TYPE_EMPTY, last(seen).get(0).getType());
         repo.data.setValue(List.of(Assignment.newTodo("a", "A", 1)));
-        assertEquals(HomeItem.TYPE_ROW, last(seen).get(0).getType());
+        assertEquals(HomeItem.TYPE_SUMMARY, last(seen).get(0).getType());
+        assertEquals(HomeItem.TYPE_SECTION_HEADER, last(seen).get(1).getType());
+        assertEquals(HomeItem.TYPE_ROW, last(seen).get(2).getType());
     }
 
     @Test
     public void nothingIsEmittedBeforeTheFirstLoad() {
         List<List<HomeItem>> seen = observe();
         vm.toggleDoneExpanded();
+        vm.refresh();
         assertTrue(seen.isEmpty());
     }
 
     @Test
     public void markDoneSetsDoneCompletedAtAndUpdatedAtToNow() {
         Assignment a = Assignment.newTodo("a", "Quiz", 1_000L);
-        vm.setDone(a, true);
+        assertTrue(vm.setDone(a, true));
         assertEquals(Arrays.asList("a", Assignment.STATUS_DONE, NOW, NOW), repo.statusWrites.get(0));
     }
 
@@ -65,37 +77,47 @@ public class AssignmentsViewModelTest {
         Assignment a = Assignment.newTodo("a", "Quiz", 1_000L);
         a.status = Assignment.STATUS_DONE;
         a.completedAt = 5_000L;
-        vm.setDone(a, false);
+        assertTrue(vm.setDone(a, false));
         assertEquals(Arrays.asList("a", Assignment.STATUS_TODO, null, NOW), repo.statusWrites.get(0));
+        assertNull("unchecking offers no Undo (design.md §4b)", vm.getPendingUndo());
     }
 
     @Test
     public void setDoneToTheCurrentStateWritesNothing() {
-        vm.setDone(Assignment.newTodo("a", "Quiz", 1L), false);
+        assertFalse(vm.setDone(Assignment.newTodo("a", "Quiz", 1L), false));
         assertTrue(repo.statusWrites.isEmpty());
     }
 
-    /** Proposal 1 (approved 2026-11-09): Undo after mark done puts the row back as it was. */
+    /** SEC-3-1: Undo after mark done reopens the row and stamps updatedAt = now, never the old value. */
     @Test
-    public void undoDoneRestoresTheOpenStatusClearsCompletedAtAndKeepsUpdatedAt() {
+    public void undoDoneRestoresTheOpenStatusClearsCompletedAtAndWritesUpdatedAtNow() {
         Assignment a = Assignment.newTodo("a", "Quiz", 1_000L);
         a.updatedAt = 2_000L;
-        Assignment before = vm.setDone(a, true);
-        assertNotSame("the snapshot is a copy", a, before);
-        vm.undoStatus(before);
-        assertEquals(Arrays.asList("a", Assignment.STATUS_TODO, null, 2_000L), repo.statusWrites.get(1));
+        assertTrue(vm.setDone(a, true));
+        PendingUndo p = vm.getPendingUndo();
+        assertNotNull(p);
+        assertEquals(PendingUndo.Kind.MARK_DONE, p.kind);
+        assertNotSame("the snapshot is a copy", a, p.assignment);
+        now = NOW + 3_000L;
+        vm.undo(p);
+        assertEquals(Arrays.asList("a", Assignment.STATUS_TODO, null, NOW + 3_000L), repo.statusWrites.get(1));
+        assertNull("used up", vm.getPendingUndo());
     }
 
+    /** SEC-3-1: Undo after delete re-inserts the same entity, but updatedAt is now. */
     @Test
-    public void deleteRemovesByIdAndReturnsTheFullEntityForUndo() {
+    public void deleteRemovesByIdAndUndoRestoresTheEntityWithUpdatedAtNow() {
         Assignment a = Assignment.newTodo("keep", "Lab report", 1_000L);
         a.course = "Biology 101";
         a.notes = "n";
         a.dueAt = 7_000L;
         a.updatedAt = 3_000L;
-        Assignment kept = vm.delete(a);
+        vm.delete(a);
         assertEquals(List.of("keep"), repo.deleted);
-        vm.restore(kept);
+        PendingUndo p = vm.getPendingUndo();
+        assertEquals(PendingUndo.Kind.DELETE, p.kind);
+        now = NOW + 4_000L;
+        vm.undo(p);
         Assignment back = repo.inserted.get(0);
         assertEquals("keep", back.id);
         assertEquals("Lab report", back.title);
@@ -103,8 +125,83 @@ public class AssignmentsViewModelTest {
         assertEquals("n", back.notes);
         assertEquals(Long.valueOf(7_000L), back.dueAt);
         assertEquals(1_000L, back.createdAt);
-        assertEquals("same updatedAt (design.md §4)", 3_000L, back.updatedAt);
         assertEquals(Assignment.STATUS_TODO, back.status);
+        assertEquals("updatedAt = now (SEC-3-1)", NOW + 4_000L, back.updatedAt);
+        assertEquals("the kept copy itself is untouched", 3_000L, p.assignment.updatedAt);
+    }
+
+    /** QA-3-2: the pending Undo lives in the ViewModel, so a rotation can show it again. */
+    @Test
+    public void pendingUndoSurvivesUntilTheSnackbarEndsAndReportsTheTimeLeft() {
+        vm.delete(Assignment.newTodo("a", "A", 1));
+        PendingUndo p = vm.getPendingUndo();
+        assertEquals(AssignmentsViewModel.UNDO_MS, vm.undoTimeLeft(p));
+        now = NOW + 1_500L;
+        assertEquals(AssignmentsViewModel.UNDO_MS - 1_500L, vm.undoTimeLeft(p));
+        now = NOW + 4_900L;
+        assertEquals("never shorter than the floor", AssignmentsViewModel.UNDO_MIN_MS, vm.undoTimeLeft(p));
+        vm.onUndoEnded(p);
+        assertNull(vm.getPendingUndo());
+    }
+
+    @Test
+    public void aNewUndoReplacesTheOldAndTheOldOnesEndDoesNotClearIt() {
+        vm.delete(Assignment.newTodo("a", "A", 1));
+        PendingUndo first = vm.getPendingUndo();
+        vm.delete(Assignment.newTodo("b", "B", 1));
+        PendingUndo second = vm.getPendingUndo();
+        assertNotSame(first, second);
+        vm.onUndoEnded(first);
+        assertSame(second, vm.getPendingUndo());
+    }
+
+    /** DES-3-3: mark done is announced by its snackbar; only a real reopen is announced. */
+    @Test
+    public void onlyARealReopenIsAnnounced() {
+        Assignment a = Assignment.newTodo("a", "Quiz", 1L);
+        vm.setDone(a, true);
+        assertNull("mark done: the snackbar speaks", vm.getAnnouncement().getValue());
+        a.status = Assignment.STATUS_DONE;
+        a.completedAt = 2L;
+        assertTrue(vm.setDone(a, false));
+        assertEquals("Quiz", vm.getAnnouncement().getValue());
+        vm.onAnnounced();
+        assertNull(vm.getAnnouncement().getValue());
+        assertFalse("ignored tap: no write", vm.setDone(Assignment.newTodo("b", "B", 1L), false));
+        assertNull(vm.getAnnouncement().getValue());
+    }
+
+    @Test
+    public void aFailedReopenIsNotAnnounced() {
+        repo.fail = new RuntimeException("disk");
+        Assignment a = Assignment.newTodo("a", "Quiz", 1L);
+        a.status = Assignment.STATUS_DONE;
+        a.completedAt = 2L;
+        vm.setDone(a, false);
+        assertNull(vm.getAnnouncement().getValue());
+    }
+
+    @Test
+    public void anIgnoredCheckOffersNoUndo() {
+        Assignment d = Assignment.newTodo("a", "Quiz", 1L);
+        d.status = Assignment.STATUS_DONE;
+        d.completedAt = 2L;
+        assertFalse(vm.setDone(d, true));
+        assertNull(vm.getPendingUndo());
+    }
+
+    /** The day can change while Home is open: a refresh re-buckets with the new clock. */
+    @Test
+    public void refreshRebucketsWithTheCurrentClock() {
+        List<List<HomeItem>> seen = observe();
+        long tomorrow = DueDates.nextLocalMidnight(NOW, TZ);
+        Assignment a = Assignment.newTodo("a", "A", 1);
+        a.dueAt = tomorrow;
+        repo.data.setValue(List.of(a));
+        assertEquals(DueBucket.THIS_WEEK, last(seen).get(1).getBucket());
+        now = tomorrow + 1;
+        vm.refresh();
+        assertEquals(DueBucket.TODAY, last(seen).get(1).getBucket());
     }
 
     @Test
@@ -114,13 +211,14 @@ public class AssignmentsViewModelTest {
         d.status = Assignment.STATUS_DONE;
         d.completedAt = 2L;
         repo.data.setValue(List.of(d));
-        assertEquals(1, last(seen).size());
-        assertFalse(last(seen).get(0).isExpanded());
+        assertEquals("caught up + Done header", 2, last(seen).size());
+        assertEquals(HomeItem.TYPE_CAUGHT_UP, last(seen).get(0).getType());
+        assertFalse(last(seen).get(1).isExpanded());
+        vm.toggleDoneExpanded();
+        assertEquals(3, last(seen).size());
+        assertTrue(last(seen).get(1).isExpanded());
         vm.toggleDoneExpanded();
         assertEquals(2, last(seen).size());
-        assertTrue(last(seen).get(0).isExpanded());
-        vm.toggleDoneExpanded();
-        assertEquals(1, last(seen).size());
     }
 
     @Test
@@ -201,7 +299,8 @@ public class AssignmentsViewModelTest {
 
         @Override
         public void updateFields(@NonNull String id, @NonNull String title, @Nullable String course,
-                                 @Nullable String notes, long updatedAt, @NonNull WriteCallback done) {
+                                 @Nullable String notes, @Nullable Long dueAt, long updatedAt,
+                                 @NonNull WriteCallback done) {
             done.onComplete(fail);
         }
 

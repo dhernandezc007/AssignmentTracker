@@ -13,3 +13,38 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Android Studio local files (shared .idea files stay tracked)
+/.idea/deploymentTargetSelector.xml
+/.idea/deploymentTargetDropDown.xml
+/.idea/androidTestResultsUserPreferences.xml
+/.idea/appInsightsSettings.xml
+/.idea/other.xml
+/.idea/shelf
+/.idea/tasks.xml
+/.idea/dictionaries
+/.idea/usage.statistics.xml
+/.idea/caches
+captures/
+.cxx/
+.externalNativeBuild/
+build/
+*.hprof
+
+# Signing material and build outputs (SEC-4-3)
+*.jks
+*.keystore
+*.p12
+keystore.properties
+signing.properties
+*.apk
+*.aab
+*.apks
+/app/release/
+output-metadata.json
+
+# Firebase config, if ever added
+google-services.json
+
+# design-taste-frontend working files
+.taste-skill/
