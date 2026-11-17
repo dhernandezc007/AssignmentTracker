@@ -1,0 +1,121 @@
+<resources>
+    <!-- Spanish (Latin America). Machine-drafted, NOT yet reviewed by a native speaker (Slice 5). -->
+
+    <!-- Shared form fields -->
+    <string name="hint_email">Correo electrónico</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="hint_full_name">Nombre completo</string>
+    <string name="hint_confirm_password">Confirmar contraseña</string>
+
+    <!-- Validation errors -->
+    <string name="error_email_required">El correo es obligatorio</string>
+    <string name="error_email_invalid">Ingresa un correo válido</string>
+    <string name="error_password_required">La contraseña es obligatoria</string>
+    <string name="error_password_too_short">Mínimo 6 caracteres</string>
+    <string name="error_name_required">El nombre es obligatorio</string>
+    <string name="error_passwords_mismatch">Las contraseñas no coinciden</string>
+
+    <!-- Login -->
+    <string name="login_title">¡Bienvenidos!</string>
+    <string name="login_subtitle">Inicia sesión para organizar tus tareas</string>
+    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_button">Iniciar sesión</string>
+    <string name="login_no_account">¿No tienes cuenta?</string>
+    <string name="login_sign_up_link">Regístrate</string>
+    <string name="toast_password_reset_soon">Pronto podrás restablecer tu contraseña</string>
+
+    <!-- Sign up -->
+    <string name="signup_title">¡Únete a la fiesta!</string>
+    <string name="signup_subtitle">Crea tu cuenta para organizar tus tareas</string>
+    <string name="signup_button">Crear cuenta</string>
+    <string name="signup_have_account">¿Ya tienes cuenta?</string>
+    <string name="signup_log_in_link">Inicia sesión</string>
+
+    <!-- Home -->
+    <string name="home_title">Tareas</string>
+    <string name="fab_add">Agregar tarea</string>
+    <string name="empty_title">Todavía no hay tareas</string>
+    <string name="empty_body">Toca Agregar tarea para anotar la primera. La fecha de entrega es opcional.</string>
+    <string name="error_save">No se pudo guardar. Inténtalo de nuevo.</string>
+
+    <!-- Fila (design.md §3.1) -->
+    <string name="meta_separator">" ·\u00A0"</string>
+    <!-- TalkBack: "Toca dos veces para editar" -->
+    <string name="action_edit">editar</string>
+
+    <!-- Agregar / editar (design.md §5, §11.1) -->
+    <string name="edit_title_new">Nueva tarea</string>
+    <string name="edit_title_edit">Editar tarea</string>
+    <string name="edit_close_cd">Cerrar sin guardar</string>
+    <string name="field_title">Título</string>
+    <string name="field_title_error_empty">Escribe un título</string>
+    <string name="field_course">Materia (opcional)</string>
+    <string name="field_course_placeholder">p. ej., Biología 101</string>
+    <string name="field_notes">Notas (opcional)</string>
+    <string name="action_save">Guardar</string>
+
+    <!-- Hechas y eliminar (design.md §3.2, §4, §4b, §11.1; Slice 3) -->
+    <string name="section_done">Hechas</string>
+    <string name="done_header_cd_collapsed">Hechas, %1$d. Toca dos veces para mostrar.</string>
+    <string name="done_header_cd_expanded">Hechas, %1$d. Toca dos veces para ocultar.</string>
+    <string name="state_collapsed">Contraído</string>
+    <string name="state_expanded">Expandido</string>
+    <string name="checkbox_cd">Hecha: %1$s</string>
+    <string name="announce_marked_done">Marcada como hecha: %1$s</string>
+    <string name="announce_marked_open">Regresó a pendientes: %1$s</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="snackbar_deleted">Tarea eliminada</string>
+    <!-- Deshacer después de marcar como hecha (Propuesta 1, aprobada 2026-11-09) -->
+    <string name="snackbar_marked_done">Marcada como hecha</string>
+    <string name="action_undo">Deshacer</string>
+
+    <!-- Fechas de entrega e inicio (design.md §3.1–§3.4, §5.2, §11; Slice 4) -->
+    <string name="summary_separator">" ·\u00A0"</string>
+    <string name="summary_separator_spoken">", "</string>
+    <string name="caught_up_title">Todo al día</string>
+    <string name="section_overdue">Vencidas</string>
+    <string name="section_today">Hoy</string>
+    <string name="section_this_week">Esta semana</string>
+    <string name="section_later">Más adelante</string>
+    <string name="section_no_date">Sin fecha</string>
+    <string name="due_overdue">Vencida ·\u00A0%1$s</string>
+    <string name="due_overdue_spoken">Vencida, %1$s</string>
+    <string name="due_today">Vence hoy</string>
+    <string name="due_tomorrow">Vence mañana</string>
+    <string name="field_due">Fecha de entrega</string>
+    <string name="field_due_empty">Sin fecha de entrega</string>
+    <string name="field_due_clear_cd">Quitar fecha de entrega</string>
+    <string name="date_picker_title">Elige la fecha de entrega</string>
+
+    <!-- "many" repite "other" para que lint MissingQuantity quede limpio (design.md §11.2). -->
+    <plurals name="summary_overdue">
+        <item quantity="one">%d vencida</item>
+        <item quantity="many">%d vencidas</item>
+        <item quantity="other">%d vencidas</item>
+    </plurals>
+    <plurals name="summary_due_today">
+        <item quantity="one">%d vence hoy</item>
+        <item quantity="many">%d vencen hoy</item>
+        <item quantity="other">%d vencen hoy</item>
+    </plurals>
+    <plurals name="summary_due_week">
+        <item quantity="one">%d vence esta semana</item>
+        <item quantity="many">%d vencen esta semana</item>
+        <item quantity="other">%d vencen esta semana</item>
+    </plurals>
+    <plurals name="summary_nothing_this_week">
+        <item quantity="one">Nada vence esta semana ·\u00A0%d pendiente</item>
+        <item quantity="many">Nada vence esta semana ·\u00A0%d pendientes</item>
+        <item quantity="other">Nada vence esta semana ·\u00A0%d pendientes</item>
+    </plurals>
+    <plurals name="caught_up_body">
+        <item quantity="one">Nada pendiente. %d hecha.</item>
+        <item quantity="many">Nada pendiente. %d hechas.</item>
+        <item quantity="other">Nada pendiente. %d hechas.</item>
+    </plurals>
+    <plurals name="section_header_cd">
+        <item quantity="one">%1$s, %2$d tarea</item>
+        <item quantity="many">%1$s, %2$d tareas</item>
+        <item quantity="other">%1$s, %2$d tareas</item>
+    </plurals>
+</resources>

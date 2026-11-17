@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Danny's fiesta palette (unchanged) -->
     <color name="mx_cream">#FFF4E0</color>
     <color name="mx_pink">#E4007C</color>
     <color name="mx_marigold">#F5A400</color>
@@ -10,4 +11,17 @@
     <color name="mx_red">#CE1126</color>
     <color name="mx_purple">#7B2D8E</color>
     <color name="mx_brown">#3E1F0D</color>
+
+    <!-- design.md §7.1 tokens -->
+    <color name="mx_pink_deep">#B0005E</color>          <!-- pink for text; mx_pink is fills/strokes only -->
+    <color name="mx_brown_muted">#6E5240</color>        <!-- secondary text, outlines -->
+    <color name="mx_rule">#EADBC4</color>               <!-- rules, outline variant -->
+    <color name="mx_white">#FFFFFF</color>              <!-- card / field surface -->
+    <color name="mx_surface_high">#FFFBF3</color>       <!-- dialog, date picker -->
+    <color name="mx_pink_container">#FFD8E9</color>
+    <color name="mx_on_pink_container">#5C0030</color>
+    <color name="mx_green_container">#CDEBDD</color>
+    <color name="mx_on_green_container">#002114</color>
+    <color name="mx_red_container">#FFDAD9</color>
+    <color name="mx_on_red_container">#410007</color>
 </resources>

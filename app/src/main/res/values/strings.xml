@@ -1,3 +1,125 @@
-<resources>
-    <string name="app_name">AssignmentTracker</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Brand name: kept the same in every language. -->
+    <string name="app_name" translatable="false">Assignment Tracker</string>
+
+    <!-- Decorative logo glyphs (placeholder until the real logo; see tasks.md Later). -->
+    <string name="login_logo_glyph" translatable="false">🌼</string>
+    <string name="signup_logo_glyph" translatable="false">🌶️</string>
+
+    <!-- Shared form fields -->
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_full_name">Full name</string>
+    <string name="hint_confirm_password">Confirm password</string>
+
+    <!-- Validation errors -->
+    <string name="error_email_required">Email is required</string>
+    <string name="error_email_invalid">Enter a valid email</string>
+    <string name="error_password_required">Password is required</string>
+    <string name="error_password_too_short">At least 6 characters</string>
+    <string name="error_name_required">Name is required</string>
+    <string name="error_passwords_mismatch">Passwords don\'t match</string>
+
+    <!-- Login -->
+    <string name="login_title">Welcome!</string>
+    <string name="login_subtitle">Log in to organize your assignments</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_button">Log In</string>
+    <string name="login_no_account">Don\'t have an account?</string>
+    <string name="login_sign_up_link">Sign Up</string>
+    <string name="toast_password_reset_soon">Password reset coming soon</string>
+
+    <!-- Sign up -->
+    <string name="signup_title">Join the Fiesta!</string>
+    <string name="signup_subtitle">Create your account to organize your assignments</string>
+    <string name="signup_button">Sign Up</string>
+    <string name="signup_have_account">Already have an account?</string>
+    <string name="signup_log_in_link">Log In</string>
+
+    <!-- Home (design.md §11.1) -->
+    <string name="home_title">Assignments</string>
+    <string name="fab_add">Add assignment</string>
+    <string name="empty_title">No assignments yet</string>
+    <string name="empty_body">Tap Add assignment to write down your first one. A due date is optional.</string>
+    <string name="error_save">Couldn\'t save. Try again.</string>
+
+    <!-- Row (design.md §3.1). Spaces are kept by the quotes. -->
+    <string name="meta_separator">" ·\u00A0"</string>
+    <!-- TalkBack: "Double-tap to edit" on a row (design.md §10) -->
+    <string name="action_edit">edit</string>
+
+    <!-- Add / Edit screen (design.md §5, §11.1) -->
+    <string name="edit_title_new">New assignment</string>
+    <string name="edit_title_edit">Edit assignment</string>
+    <string name="edit_close_cd">Close without saving</string>
+    <string name="field_title">Title</string>
+    <string name="field_title_error_empty">Add a title</string>
+    <string name="field_course">Course (optional)</string>
+    <string name="field_course_placeholder">e.g. Biology 101</string>
+    <string name="field_notes">Notes (optional)</string>
+    <string name="action_save">Save</string>
+
+    <!-- Done and delete (design.md §3.2, §4, §4b, §11.1; Slice 3) -->
+    <string name="section_done">Done</string>
+    <string name="done_header_cd_collapsed">Done, %1$d. Double-tap to show.</string>
+    <string name="done_header_cd_expanded">Done, %1$d. Double-tap to hide.</string>
+    <string name="state_collapsed">Collapsed</string>
+    <string name="state_expanded">Expanded</string>
+    <!-- TalkBack adds "checkbox, checked / not checked" after this. -->
+    <string name="checkbox_cd">Done: %1$s</string>
+    <!-- Unused since DES-3-3 (the snackbar speaks); kept until the Slice 5 phone check (design.md §4b). -->
+    <string name="announce_marked_done" tools:ignore="UnusedResources">Marked done: %1$s</string>
+    <string name="announce_marked_open">Moved back to open: %1$s</string>
+    <string name="action_delete">Delete</string>
+    <string name="snackbar_deleted">Assignment deleted</string>
+    <!-- Undo after mark done (Proposal 1, approved 2026-11-09) -->
+    <string name="snackbar_marked_done">Marked done</string>
+    <string name="action_undo">Undo</string>
+
+    <!-- Due dates and the home screen (design.md §3.1–§3.4, §5.2, §11; Slice 4) -->
+    <string name="summary_separator">" ·\u00A0"</string>
+    <!-- Content description of the summary, so TalkBack reads a pause, not "middle dot" (§10). -->
+    <string name="summary_separator_spoken">", "</string>
+    <string name="caught_up_title">All caught up</string>
+    <string name="section_overdue">Overdue</string>
+    <string name="section_today">Today</string>
+    <string name="section_this_week">This week</string>
+    <string name="section_later">Later</string>
+    <string name="section_no_date">No date</string>
+    <!-- %1$s is a date such as "Thu, Nov 6" -->
+    <string name="due_overdue">Overdue ·\u00A0%1$s</string>
+    <!-- %1$s is a spoken date such as "Thursday, November 6" -->
+    <string name="due_overdue_spoken">Overdue, %1$s</string>
+    <string name="due_today">Due today</string>
+    <string name="due_tomorrow">Due tomorrow</string>
+    <string name="field_due">Due date</string>
+    <string name="field_due_empty">No due date</string>
+    <string name="field_due_clear_cd">Clear due date</string>
+    <string name="date_picker_title">Pick a due date</string>
+
+    <plurals name="summary_overdue">
+        <item quantity="one">%d overdue</item>
+        <item quantity="other">%d overdue</item>
+    </plurals>
+    <plurals name="summary_due_today">
+        <item quantity="one">%d due today</item>
+        <item quantity="other">%d due today</item>
+    </plurals>
+    <plurals name="summary_due_week">
+        <item quantity="one">%d due this week</item>
+        <item quantity="other">%d due this week</item>
+    </plurals>
+    <plurals name="summary_nothing_this_week">
+        <item quantity="one">Nothing due this week ·\u00A0%d open</item>
+        <item quantity="other">Nothing due this week ·\u00A0%d open</item>
+    </plurals>
+    <plurals name="caught_up_body">
+        <item quantity="one">Nothing open. %d done.</item>
+        <item quantity="other">Nothing open. %d done.</item>
+    </plurals>
+    <!-- %1$s is a section name ("Overdue"), %2$d how many rows it has. -->
+    <plurals name="section_header_cd">
+        <item quantity="one">%1$s, %2$d assignment</item>
+        <item quantity="other">%1$s, %2$d assignments</item>
+    </plurals>
 </resources>

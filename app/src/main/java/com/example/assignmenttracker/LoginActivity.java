@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 import com.example.assignmenttracker.databinding.ActivityLoginBinding;
 
@@ -18,8 +19,16 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // SECURITY: placeholder, not authentication. See SEC-0-1.
+        // Off the launch path; release builds refuse to open it at all.
+        if (!BuildConfig.AUTH_ENABLED) {
+            finish();
+            return;
+        }
+        WindowCompat.enableEdgeToEdge(getWindow());
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        SystemBarInsets.apply(binding.getRoot());
 
         binding.btnLogin.setOnClickListener(v -> attemptLogin());
 
@@ -27,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(this, SignUpActivity.class)));
 
         binding.tvForgotPassword.setOnClickListener(v ->
-                Toast.makeText(this, "Password reset coming soon", Toast.LENGTH_SHORT).show());
+                Toast.makeText(this, R.string.toast_password_reset_soon, Toast.LENGTH_SHORT).show());
     }
 
     private void attemptLogin() {
@@ -41,18 +50,18 @@ public class LoginActivity extends AppCompatActivity {
         boolean valid = true;
 
         if (email.isEmpty()) {
-            binding.tilEmail.setError("Email is required");
+            binding.tilEmail.setError(getString(R.string.error_email_required));
             valid = false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.tilEmail.setError("Enter a valid email");
+            binding.tilEmail.setError(getString(R.string.error_email_invalid));
             valid = false;
         }
 
         if (password.isEmpty()) {
-            binding.tilPassword.setError("Password is required");
+            binding.tilPassword.setError(getString(R.string.error_password_required));
             valid = false;
         } else if (password.length() < 6) {
-            binding.tilPassword.setError("At least 6 characters");
+            binding.tilPassword.setError(getString(R.string.error_password_too_short));
             valid = false;
         }
 
@@ -64,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
     private void performLogin(String email, String password) {
         setLoading(true);
 
+        // SECURITY: placeholder, not authentication. See SEC-0-1.
         // TODO: replace with real authentication (Firebase Auth, your API, etc.)
         // Example with Firebase:
         // FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)

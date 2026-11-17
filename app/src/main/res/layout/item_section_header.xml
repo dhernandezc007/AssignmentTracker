@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Bucket header, design.md §3.2: serape swatch, label (14sp bold, sentence case), count. One
+    accessibility node, a heading, whose content description ("Overdue, 2 assignments") the adapter
+    sets. Not clickable, not swipeable. DES-3-5: the swatch is pinned to the label's top, so it
+    stays on the first line when the label wraps; the count follows the label and stays visible.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sectionHeader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:accessibilityHeading="true"
+    android:focusable="false"
+    android:screenReaderFocusable="true"
+    android:minHeight="@dimen/touch_target"
+    android:paddingStart="@dimen/space_screen"
+    android:paddingTop="@dimen/header_padding_top"
+    android:paddingEnd="@dimen/space_screen"
+    android:paddingBottom="@dimen/header_padding_bottom"
+    tools:targetApi="28">
+
+    <ImageView
+        android:id="@+id/sectionSwatch"
+        android:layout_width="@dimen/swatch_width"
+        android:layout_height="@dimen/swatch_height"
+        android:importantForAccessibility="no"
+        android:src="@drawable/serape_swatch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/sectionLabel" />
+
+    <TextView
+        android:id="@+id/sectionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/swatch_gap"
+        android:importantForAccessibility="no"
+        android:textAppearance="@style/TextAppearance.AT.SectionLabel"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/sectionCount"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@id/sectionSwatch"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/section_overdue" />
+
+    <TextView
+        android:id="@+id/sectionCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/header_count_gap"
+        android:importantForAccessibility="no"
+        android:textAppearance="@style/TextAppearance.AT.SectionCount"
+        app:layout_constraintBaseline_toBaselineOf="@id/sectionLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/sectionLabel"
+        tools:text="2" />
+</androidx.constraintlayout.widget.ConstraintLayout>

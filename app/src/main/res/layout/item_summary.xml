@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Summary line, design.md §3.4: the first adapter item, scrolls with the list. Wraps freely
+    (no maxLines). Not a heading and not a live region. Text and spans are set by the adapter.
+-->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/summary"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/space_screen"
+    android:paddingTop="@dimen/summary_padding_v"
+    android:paddingEnd="@dimen/space_screen"
+    android:paddingBottom="@dimen/summary_padding_v"
+    android:textAppearance="@style/TextAppearance.AT.Summary"
+    tools:text="2 overdue · 2 due today" />

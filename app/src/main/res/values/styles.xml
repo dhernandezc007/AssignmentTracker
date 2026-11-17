@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Type scale, design.md §7.2 (only the styles Slices 1-2 use) -->
+    <style name="TextAppearance.AT.ScreenTitle" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
+
+    <style name="TextAppearance.AT.StateTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
+
+    <!-- 16sp medium -->
+    <style name="TextAppearance.AT.RowTitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- Empty-state body: 16sp regular, muted (design.md §3.5) -->
+    <style name="TextAppearance.AT.StateBody" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <!-- DES-1-2: BodyLarge tracks at 0.5sp, which looks loose next to the untracked title. -->
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- Edit toolbar title, 20sp bold (design.md §5.1) -->
+    <style name="TextAppearance.AT.ToolbarTitle" parent="TextAppearance.AT.StateTitle" />
+
+    <!-- Row line 2: 14sp regular, muted (design.md §3.1) -->
+    <style name="TextAppearance.AT.RowMeta" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- Save, design.md §5.3: Danny.s btnLogin as a style. Always enabled (§8.1 rule 1). -->
+    <style name="Widget.AT.Button.Pill" parent="Widget.Material3.Button">
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="cornerRadius">28dp</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="strokeColor">@color/mx_marigold</item>
+        <item name="strokeWidth">2dp</item>
+    </style>
+
+    <!-- FAB, design.md §6: Danny's login button as an extended FAB -->
+    <style name="Widget.AT.ExtendedFab" parent="Widget.Material3.ExtendedFloatingActionButton.Icon.Primary">
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="iconTint">?attr/colorOnPrimary</item>
+        <item name="rippleColor">@color/mx_white</item>
+        <item name="strokeColor">@color/mx_marigold</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AT.Pill</item>
+    </style>
+
+    <style name="ShapeAppearance.AT.Pill" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Text field, design.md §5.2 -->
+    <style name="Widget.AT.TextField" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">?attr/colorSurface</item>
+        <item name="boxCornerRadiusTopStart">@dimen/radius_card</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_card</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_card</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_card</item>
+        <item name="boxStrokeColor">@color/field_stroke</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="hintTextColor">@color/mx_pink_deep</item>
+        <item name="errorTextColor">?attr/colorError</item>
+    </style>
+
+    <!--
+        Dialogs: M3 text buttons use colorPrimary (mx_pink), which is 4.2:1 on the dialog
+        surface and design.md §8 says mx_pink is not for text. Use mx_pink_deep instead.
+    -->
+    <style name="ThemeOverlay.AT.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.AT.Button.TextButton.Dialog</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.AT.Button.TextButton.Dialog</item>
+    </style>
+
+    <style name="Widget.AT.Button.TextButton.Dialog" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/mx_pink_deep</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!-- Section / Done header label: 14sp bold, sentence case (design.md §3.2) -->
+    <style name="TextAppearance.AT.SectionLabel" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!-- Section / Done header count: 14sp regular, muted (design.md §3.2) -->
+    <style name="TextAppearance.AT.SectionCount" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- Snackbar, design.md §4 (DES-3-2): 12dp corners like the cards. The 16dp side margins
+         are set in MainActivity, so the gap above the FAB stays M3's default. -->
+    <style name="Widget.AT.Snackbar" parent="Widget.Material3.Snackbar">
+        <item name="shapeAppearance">@style/ShapeAppearance.AT.Card</item>
+    </style>
+
+    <style name="ShapeAppearance.AT.Card" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/radius_card</item>
+    </style>
+
+    <!-- Date picker, design.md §7.1 and §8.1 rule 5: deep pink everywhere inside the picker
+         (selected day, today ring, OK/Cancel), white on it. Surface is mx_surface_high. -->
+    <style name="ThemeOverlay.AT.DatePicker" parent="ThemeOverlay.Material3.MaterialCalendar">
+        <item name="colorPrimary">@color/mx_pink_deep</item>
+        <item name="colorOnPrimary">@color/mx_white</item>
+    </style>
+
+    <!-- "All caught up", 20sp bold in mx_green (6.3:1 on cream; design.md §3.4) -->
+    <style name="TextAppearance.AT.StateTitle.CaughtUp">
+        <item name="android:textColor">@color/mx_green</item>
+    </style>
+
+    <!-- Summary line, 16sp medium (design.md §3.4) -->
+    <style name="TextAppearance.AT.Summary" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- Snackbar action, design.md §4: mx_yellow (colorPrimaryInverse) on mx_brown, sentence case -->
+    <style name="Widget.AT.Button.TextButton.Snackbar" parent="Widget.Material3.Button.TextButton.Snackbar">
+        <item name="android:textAllCaps">false</item>
+    </style>
+</resources>

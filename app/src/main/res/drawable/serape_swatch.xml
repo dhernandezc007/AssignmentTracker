@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    design.md §3.2: the section-header swatch. The 5 bands of serape_stripes.xml in the same
+    colors and proportions (4/6/4/6/4 of 24 = 3.33/5/3.33/5/3.33 of 20), clipped to 2dp corners.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="16dp"
+    android:height="20dp"
+    android:viewportWidth="16"
+    android:viewportHeight="20">
+    <group>
+        <clip-path android:pathData="M2,0 H14 A2,2 0 0 1 16,2 V18 A2,2 0 0 1 14,20 H2 A2,2 0 0 1 0,18 V2 A2,2 0 0 1 2,0 Z" />
+        <path android:fillColor="@color/mx_marigold" android:pathData="M0,0 H16 V3.333 H0 Z" />
+        <path android:fillColor="@color/mx_pink" android:pathData="M0,3.333 H16 V8.333 H0 Z" />
+        <path android:fillColor="@color/mx_turquoise" android:pathData="M0,8.333 H16 V11.667 H0 Z" />
+        <path android:fillColor="@color/mx_red" android:pathData="M0,11.667 H16 V16.667 H0 Z" />
+        <path android:fillColor="@color/mx_green" android:pathData="M0,16.667 H16 V20 H0 Z" />
+    </group>
+</vector>
