@@ -24,4 +24,11 @@
     <color name="mx_on_green_container">#002114</color>
     <color name="mx_red_container">#FFDAD9</color>
     <color name="mx_on_red_container">#410007</color>
+
+    <!-- Study buddy art (abuelita / abuelo). Decorative only, never text. -->
+    <color name="buddy_skin">#C98B5C</color>
+    <color name="buddy_skin_shadow">#A86F45</color>
+    <color name="buddy_hair">#DADADA</color>
+    <color name="buddy_hair_light">#EFEFEF</color>
+    <color name="buddy_hair_dark">#9E9E9E</color>
 </resources>

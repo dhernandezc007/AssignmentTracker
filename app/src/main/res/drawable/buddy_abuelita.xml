@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Study buddy: Abuelita. Silver bun with a red flower, round glasses, rosy cheeks,
+     gold earrings and a pink rebozo with marigold and turquoise stripes. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+
+    <!-- Badge -->
+    <path android:fillColor="@color/mx_yellow"
+        android:pathData="M32,0 a32,32 0 1,1 0,64 a32,32 0 1,1 0,-64 Z" />
+
+    <group>
+        <clip-path android:pathData="M32,0 a32,32 0 1,1 0,64 a32,32 0 1,1 0,-64 Z" />
+
+        <!-- Bun and the hair behind the face -->
+        <path android:fillColor="@color/buddy_hair"
+            android:pathData="M25,11 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0 Z" />
+        <path android:fillColor="@color/buddy_hair"
+            android:pathData="M16,30 a16,17 0 1,0 32,0 a16,17 0 1,0 -32,0 Z" />
+
+        <!-- Rebozo over the shoulders -->
+        <path android:fillColor="@color/mx_pink"
+            android:pathData="M6,64 Q8,45 32,45 Q56,45 58,64 Z" />
+        <path android:strokeColor="@color/mx_marigold" android:strokeWidth="2"
+            android:pathData="M10,55 Q32,48 54,55" />
+        <path android:strokeColor="@color/mx_turquoise" android:strokeWidth="2"
+            android:pathData="M8,60 Q32,53 56,60" />
+
+        <!-- Neck and face -->
+        <path android:fillColor="@color/buddy_skin_shadow"
+            android:pathData="M27,39 h10 v8 h-10 Z" />
+        <path android:fillColor="@color/buddy_skin"
+            android:pathData="M20,31 a12,13 0 1,0 24,0 a12,13 0 1,0 -24,0 Z" />
+
+        <!-- Fringe, parted in the middle -->
+        <path android:fillColor="@color/buddy_hair_light"
+            android:pathData="M20,29 Q20,17 32,17 Q44,17 44,29 Q41,21 32,21.5 Q23,21 20,29 Z" />
+
+        <!-- Flower in the hair -->
+        <path android:fillColor="@color/mx_red"
+            android:pathData="M39,18 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 Z" />
+        <path android:fillColor="@color/mx_yellow"
+            android:pathData="M41,18 a1,1 0 1,0 2,0 a1,1 0 1,0 -2,0 Z" />
+
+        <!-- Earrings -->
+        <path android:fillColor="@color/mx_marigold"
+            android:pathData="M19.2,35 a1.4,1.4 0 1,0 2.8,0 a1.4,1.4 0 1,0 -2.8,0 Z M42,35 a1.4,1.4 0 1,0 2.8,0 a1.4,1.4 0 1,0 -2.8,0 Z" />
+
+        <!-- Cheeks -->
+        <path android:fillColor="@color/mx_pink" android:fillAlpha="0.4"
+            android:pathData="M22.3,35.5 a2.2,2.2 0 1,0 4.4,0 a2.2,2.2 0 1,0 -4.4,0 Z M37.3,35.5 a2.2,2.2 0 1,0 4.4,0 a2.2,2.2 0 1,0 -4.4,0 Z" />
+
+        <!-- Eyes and glasses -->
+        <path android:fillColor="@color/mx_brown"
+            android:pathData="M26,30.5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z M35.8,30.5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" />
+        <path android:strokeColor="@color/mx_brown" android:strokeWidth="1.3"
+            android:pathData="M23.4,30.5 a3.7,3.7 0 1,0 7.4,0 a3.7,3.7 0 1,0 -7.4,0 Z M33.2,30.5 a3.7,3.7 0 1,0 7.4,0 a3.7,3.7 0 1,0 -7.4,0 Z M30.8,30 L33.2,30" />
+
+        <!-- Smile -->
+        <path android:strokeColor="@color/mx_brown" android:strokeWidth="1.4"
+            android:strokeLineCap="round"
+            android:pathData="M28,37.5 Q32,41.5 36,37.5" />
+    </group>
+</vector>

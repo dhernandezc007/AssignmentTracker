@@ -141,6 +141,13 @@
         <item name="android:letterSpacing">0</item>
     </style>
 
+    <!-- Study buddy speech bubble: 15sp, brown on white -->
+    <style name="TextAppearance.AT.BuddyBubble" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
     <!-- Snackbar action, design.md §4: mx_yellow (colorPrimaryInverse) on mx_brown, sentence case -->
     <style name="Widget.AT.Button.TextButton.Snackbar" parent="Widget.Material3.Button.TextButton.Snackbar">
         <item name="android:textAllCaps">false</item>

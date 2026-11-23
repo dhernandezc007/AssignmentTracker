@@ -53,8 +53,48 @@
             android:paddingBottom="@dimen/list_bottom_clearance"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:targetApi="26" />
+
+        <!-- Study buddy: abuelita / abuelo cheering you on. Nav-bar inset is applied as
+             bottom padding in code; the FAB sits above this strip. -->
+        <LinearLayout
+            android:id="@+id/buddy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_buddy_strip"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/space_screen"
+            android:paddingTop="@dimen/buddy_padding_v"
+            android:paddingEnd="@dimen/space_screen"
+            android:paddingBottom="@dimen/buddy_padding_v">
+
+            <ImageView
+                android:id="@+id/buddyAvatar"
+                android:layout_width="@dimen/buddy_avatar"
+                android:layout_height="@dimen/buddy_avatar"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/buddy_cd_abuelita"
+                android:src="@drawable/buddy_abuelita" />
+
+            <TextView
+                android:id="@+id/buddyBubble"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/buddy_bubble_gap"
+                android:layout_weight="1"
+                android:background="@drawable/bg_buddy_bubble"
+                android:foreground="?attr/selectableItemBackground"
+                android:minHeight="@dimen/touch_target"
+                android:gravity="center_vertical|start"
+                android:paddingStart="@dimen/buddy_bubble_padding_h"
+                android:paddingTop="@dimen/buddy_bubble_padding_v"
+                android:paddingEnd="@dimen/buddy_bubble_padding_h"
+                android:paddingBottom="@dimen/buddy_bubble_padding_v"
+                android:textAppearance="@style/TextAppearance.AT.BuddyBubble" />
+        </LinearLayout>
     </LinearLayout>
 
+    <!-- Bottom margin is set in code so the FAB sits just above the study buddy strip. -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAdd"
         style="@style/Widget.AT.ExtendedFab"
@@ -65,5 +105,13 @@
         android:contentDescription="@string/fab_add"
         android:text="@string/fab_add"
         app:icon="@drawable/ic_add" />
+
+    <!-- Mark-done fiesta: papel picado confetti over everything. Draw-only, never touchable. -->
+    <com.example.assignmenttracker.ui.fiesta.ConfettiView
+        android:id="@+id/confetti"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="@dimen/confetti_elevation"
+        android:importantForAccessibility="no" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

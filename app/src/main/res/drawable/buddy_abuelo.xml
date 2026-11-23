@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Study buddy: Abuelo. Thinning silver hair, bushy brows, round glasses, a big white
+     bigote and a marigold shirt with a cream collar. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+
+    <!-- Badge -->
+    <path android:fillColor="@color/mx_turquoise"
+        android:pathData="M32,0 a32,32 0 1,1 0,64 a32,32 0 1,1 0,-64 Z" />
+
+    <group>
+        <clip-path android:pathData="M32,0 a32,32 0 1,1 0,64 a32,32 0 1,1 0,-64 Z" />
+
+        <!-- Shirt and collar -->
+        <path android:fillColor="@color/mx_marigold"
+            android:pathData="M6,64 Q8,45 32,45 Q56,45 58,64 Z" />
+        <path android:fillColor="@color/mx_cream"
+            android:pathData="M25,45.5 L32,53 L28,56 Z M39,45.5 L32,53 L36,56 Z" />
+
+        <!-- Neck, ears and face -->
+        <path android:fillColor="@color/buddy_skin_shadow"
+            android:pathData="M27,39 h10 v8 h-10 Z" />
+        <path android:fillColor="@color/buddy_skin_shadow"
+            android:pathData="M17.5,31 a2.8,3.6 0 1,0 5.6,0 a2.8,3.6 0 1,0 -5.6,0 Z M40.9,31 a2.8,3.6 0 1,0 5.6,0 a2.8,3.6 0 1,0 -5.6,0 Z" />
+        <path android:fillColor="@color/buddy_skin"
+            android:pathData="M20,31 a12,13 0 1,0 24,0 a12,13 0 1,0 -24,0 Z" />
+
+        <!-- Hair: silver on the sides, thin on top -->
+        <path android:fillColor="@color/buddy_hair"
+            android:pathData="M19.6,30 Q19,19 26,17 L25,23 Q22,25 21.5,31 Z M44.4,30 Q45,19 38,17 L39,23 Q42,25 42.5,31 Z" />
+        <path android:strokeColor="@color/buddy_hair" android:strokeWidth="1.2"
+            android:strokeLineCap="round"
+            android:pathData="M27,18.6 Q32,16.6 37,18.6" />
+
+        <!-- Brows -->
+        <path android:strokeColor="@color/buddy_hair_dark" android:strokeWidth="1.8"
+            android:strokeLineCap="round"
+            android:pathData="M23.8,25.4 Q27,24 30,25.4 M34,25.4 Q37,24 40.2,25.4" />
+
+        <!-- Eyes and glasses -->
+        <path android:fillColor="@color/mx_brown"
+            android:pathData="M26,30.5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z M35.8,30.5 a1.1,1.1 0 1,0 2.2,0 a1.1,1.1 0 1,0 -2.2,0 Z" />
+        <path android:strokeColor="@color/mx_brown" android:strokeWidth="1.3"
+            android:pathData="M23.4,30.5 a3.7,3.7 0 1,0 7.4,0 a3.7,3.7 0 1,0 -7.4,0 Z M33.2,30.5 a3.7,3.7 0 1,0 7.4,0 a3.7,3.7 0 1,0 -7.4,0 Z M30.8,30 L33.2,30" />
+
+        <!-- Cheeks -->
+        <path android:fillColor="@color/mx_pink" android:fillAlpha="0.3"
+            android:pathData="M22,35.5 a2.2,2.2 0 1,0 4.4,0 a2.2,2.2 0 1,0 -4.4,0 Z M37.6,35.5 a2.2,2.2 0 1,0 4.4,0 a2.2,2.2 0 1,0 -4.4,0 Z" />
+
+        <!-- Smile, then the bigote over it -->
+        <path android:strokeColor="@color/mx_brown" android:strokeWidth="1.3"
+            android:strokeLineCap="round"
+            android:pathData="M29,40 Q32,42.4 35,40" />
+        <path android:fillColor="@color/buddy_hair_light"
+            android:strokeColor="@color/buddy_hair_dark" android:strokeWidth="0.6"
+            android:pathData="M23.5,38 Q27.5,33.4 32,35.6 Q36.5,33.4 40.5,38 Q36.5,39.6 32,37.8 Q27.5,39.6 23.5,38 Z" />
+    </group>
+</vector>

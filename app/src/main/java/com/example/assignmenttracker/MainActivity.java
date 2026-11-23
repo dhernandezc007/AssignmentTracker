@@ -25,6 +25,7 @@ import com.example.assignmenttracker.ui.assignments.AssignmentsViewModel;
 import com.example.assignmenttracker.ui.assignments.HomeItems;
 import com.example.assignmenttracker.ui.assignments.PendingUndo;
 import com.example.assignmenttracker.ui.assignments.SwipeToDeleteCallback;
+import com.example.assignmenttracker.ui.buddy.StudyBuddyController;
 import com.example.assignmenttracker.util.DueDates;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private AssignmentsViewModel viewModel;
     private AssignmentListAdapter adapter;
+    private StudyBuddyController buddy;
     @Nullable private Snackbar snackbar;
     private boolean openingEditor;
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 .get(AssignmentsViewModel.class);
 
         viewModel = vm;
+        buddy = new StudyBuddyController(binding.buddyAvatar, binding.buddyBubble);
         AssignmentListAdapter.Listener listener = new AssignmentListAdapter.Listener() {
             @Override
             public void onRowClick(@NonNull Assignment a) {
@@ -100,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
             // first load, an expand or a removal doesn't move the list (what's due next stays first).
             int target = HomeItems.scrollTargetForNewOpenRow(adapter.getCurrentList(), items);
             adapter.submitList(items, target < 0 ? null : () -> binding.list.scrollToPosition(target));
+            buddy.onHomeItems(items);
         });
         vm.getWriteFailed().observe(this, failed -> {
             if (!Boolean.TRUE.equals(failed)) return;
@@ -153,6 +157,12 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    @Override
+    protected void onDestroy() {
+        buddy.release();
+        super.onDestroy();
+    }
+
     private void scheduleMidnightTick() {
         handler.removeCallbacks(midnightTick);
         long now = System.currentTimeMillis();
@@ -167,10 +177,13 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Mark done or reopen (design.md §4b). Marking done offers Undo (Proposal 1), and that
-     * snackbar is the only announcement (DES-3-3). An ignored tap does nothing.
+     * snackbar is the only announcement (DES-3-3). An ignored tap does nothing. Marking done
+     * also throws the fiesta: confetti, and the study buddy cheers.
      */
     private void toggleDone(@NonNull Assignment a, boolean done) {
         if (!viewModel.setDone(a, done) || !done) return;
+        binding.confetti.celebrate();
+        buddy.celebrate();
         PendingUndo p = viewModel.getPendingUndo();
         if (p != null) showUndo(p, AssignmentsViewModel.UNDO_MS);
     }
@@ -226,27 +239,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Edge-to-edge (design.md §2). Status bar → header top padding; nav bar → list bottom
-     * padding and FAB bottom margin. Side insets (landscape cutout / nav bar) go to the
+     * Edge-to-edge (design.md §2). Status bar → header top padding; nav bar → study buddy
+     * bottom padding, and the FAB sits just above the buddy strip. Side insets (landscape cutout / nav bar) go to the
      * content (title text, list cards, FAB), never to the decorative banner, which bleeds to
      * both edges (QA-1-3). Physical left/right because insets are physical.
      */
     private void applyInsets() {
         int clearance = getResources().getDimensionPixelSize(R.dimen.list_bottom_clearance);
         int side = getResources().getDimensionPixelSize(R.dimen.space_screen);
+        int buddyV = getResources().getDimensionPixelSize(R.dimen.buddy_padding_v);
+        // The buddy's height depends on its line (1-3 lines of text) and the nav-bar inset.
+        binding.buddy.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
+            if (b - t != ob - ot) binding.buddy.post(this::placeFabAboveBuddy);
+        });
         ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
             Insets bars = insets.getInsets(
                     WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
             binding.header.setPadding(0, bars.top, 0, 0);
             binding.title.setPadding(side + bars.left, binding.title.getPaddingTop(),
                     side + bars.right, binding.title.getPaddingBottom());
-            binding.list.setPadding(bars.left, 0, bars.right, clearance + bars.bottom);
+            binding.list.setPadding(bars.left, 0, bars.right, clearance);
+            binding.buddy.setPadding(side + bars.left, buddyV, side + bars.right, buddyV + bars.bottom);
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) binding.fabAdd.getLayoutParams();
             lp.leftMargin = side + bars.left;
             lp.rightMargin = side + bars.right;
-            lp.bottomMargin = side + bars.bottom;
             binding.fabAdd.setLayoutParams(lp);
+            placeFabAboveBuddy();
             return WindowInsetsCompat.CONSUMED;
         });
+    }
+
+    /** FAB bottom margin: 16dp above the study buddy strip. */
+    private void placeFabAboveBuddy() {
+        int side = getResources().getDimensionPixelSize(R.dimen.space_screen);
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) binding.fabAdd.getLayoutParams();
+        int bottom = side + binding.buddy.getHeight();
+        if (lp.bottomMargin == bottom) return;
+        lp.bottomMargin = bottom;
+        binding.fabAdd.setLayoutParams(lp);
     }
 }

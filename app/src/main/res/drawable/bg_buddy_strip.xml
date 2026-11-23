@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Study buddy strip: cream, with a thin rule along the top that separates it from the list. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/mx_rule" />
+        </shape>
+    </item>
+    <item android:top="1dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/mx_cream" />
+        </shape>
+    </item>
+</layer-list>

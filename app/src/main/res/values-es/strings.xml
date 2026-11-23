@@ -87,6 +87,47 @@
     <string name="field_due_clear_cd">Quitar fecha de entrega</string>
     <string name="date_picker_title">Elige la fecha de entrega</string>
 
+    <!-- Compañero de estudio (abuelita / abuelo) -->
+    <string name="buddy_cd_abuelita">Abuelita, tu compañera de estudio</string>
+    <string name="buddy_cd_abuelo">Abuelo, tu compañero de estudio</string>
+    <string name="buddy_action_switch_to_abuelo">cambiar a Abuelo</string>
+    <string name="buddy_action_switch_to_abuelita">cambiar a Abuelita</string>
+    <string name="buddy_action_next">escuchar otra cosa</string>
+
+    <string-array name="buddy_lines_empty">
+        <item>Anota lo que tienes que hacer, corazón. Aquí estoy contigo.</item>
+        <item>¿Todavía no hay tareas? Agrega una y empezamos.</item>
+        <item>Todo gran sueño empieza con una listita, mi amor.</item>
+    </string-array>
+    <string-array name="buddy_lines_caught_up">
+        <item>¡Todo listo! Ve a tomarte un cafecito, te lo ganaste.</item>
+        <item>¡Ya no queda nada! Qué orgullo, corazón.</item>
+        <item>¡Terminaste! Ahora ve a llamarle a tu mamá.</item>
+    </string-array>
+    <string-array name="buddy_lines_overdue">
+        <item>Un poquito tarde está bien. Vamos a sacar una juntos, ¿sí?</item>
+        <item>No te preocupes. Empieza por la más antigua, mi amor.</item>
+        <item>Ándale, una a la vez. Has hecho cosas más difíciles.</item>
+    </string-array>
+    <string-array name="buddy_lines_today">
+        <item>Algo vence hoy. ¡Échale ganas!</item>
+        <item>Hoy es el día, corazón. Tú puedes.</item>
+        <item>Termina lo de hoy y te hago conchas.</item>
+    </string-array>
+    <string-array name="buddy_lines_steady">
+        <item>Mírate, al día con todo. ¡Qué orgullo!</item>
+        <item>Un poquito cada día, mi amor. Poco a poco.</item>
+        <item>Descansa si lo necesitas. Luego le seguimos, ¿eh?</item>
+        <item>Toma agüita y sigue, corazón.</item>
+    </string-array>
+    <string-array name="buddy_lines_celebrate">
+        <item>¡Eso! ¡Así me gusta!</item>
+        <item>¡Ay, qué bien! ¡Una menos!</item>
+        <item>¡Bravo! Se lo voy a contar a toda la familia.</item>
+        <item>¡Así se hace, mi amor!</item>
+        <item>¡Felicidades! ¡Que suenen las campanas!</item>
+    </string-array>
+
     <!-- "many" repite "other" para que lint MissingQuantity quede limpio (design.md §11.2). -->
     <plurals name="summary_overdue">
         <item quantity="one">%d vencida</item>

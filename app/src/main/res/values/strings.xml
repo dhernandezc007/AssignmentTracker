@@ -97,6 +97,50 @@
     <string name="field_due_clear_cd">Clear due date</string>
     <string name="date_picker_title">Pick a due date</string>
 
+    <!-- Study buddy (abuelita / abuelo) at the bottom of Home. Terms of endearment are
+         gender-neutral on purpose (corazón, mi amor). -->
+    <string name="buddy_cd_abuelita">Abuelita, your study buddy</string>
+    <string name="buddy_cd_abuelo">Abuelo, your study buddy</string>
+    <!-- TalkBack: "Double-tap to switch to Abuelo" -->
+    <string name="buddy_action_switch_to_abuelo">switch to Abuelo</string>
+    <string name="buddy_action_switch_to_abuelita">switch to Abuelita</string>
+    <!-- TalkBack: "Double-tap to hear something else" -->
+    <string name="buddy_action_next">hear something else</string>
+
+    <string-array name="buddy_lines_empty">
+        <item>Write down what you have to do, corazón. I\'m right here.</item>
+        <item>No tareas yet? Add one and let\'s get started.</item>
+        <item>Every big dream starts with a little list, mi amor.</item>
+    </string-array>
+    <string-array name="buddy_lines_caught_up">
+        <item>¡Todo listo! Go have a cafecito, you earned it.</item>
+        <item>Nothing left! I\'m so proud of you, corazón.</item>
+        <item>All done! Now go call your mamá.</item>
+    </string-array>
+    <string-array name="buddy_lines_overdue">
+        <item>A little late is okay. Let\'s knock one out together, ¿sí?</item>
+        <item>No te preocupes. Start with the oldest one, mi amor.</item>
+        <item>Ándale, one at a time. You\'ve done harder things.</item>
+    </string-array>
+    <string-array name="buddy_lines_today">
+        <item>Something\'s due today. ¡Échale ganas!</item>
+        <item>Today\'s the day, corazón. You\'ve got this.</item>
+        <item>Finish today\'s and I\'ll make you conchas.</item>
+    </string-array>
+    <string-array name="buddy_lines_steady">
+        <item>Look at you, staying on top of it. ¡Qué orgullo!</item>
+        <item>A little every day, mi amor. Poco a poco.</item>
+        <item>Take a break if you need one. Then back to it, ¿eh?</item>
+        <item>Drink some water and keep going, corazón.</item>
+    </string-array>
+    <string-array name="buddy_lines_celebrate">
+        <item>¡Eso! That\'s my grandkid!</item>
+        <item>¡Ay, qué bien! One more done!</item>
+        <item>¡Bravo! I\'m telling the whole family.</item>
+        <item>¡Así se hace, mi amor!</item>
+        <item>¡Felicidades! Ring the bells!</item>
+    </string-array>
+
     <plurals name="summary_overdue">
         <item quantity="one">%d overdue</item>
         <item quantity="other">%d overdue</item>

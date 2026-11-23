@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Study buddy speech bubble: white card with a marigold edge; the corner nearest the
+     avatar is tight so the bubble reads as coming from them. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="?attr/colorSurface" />
+    <stroke android:width="1.5dp" android:color="@color/mx_marigold" />
+    <corners
+        android:topLeftRadius="16dp"
+        android:topRightRadius="16dp"
+        android:bottomLeftRadius="4dp"
+        android:bottomRightRadius="16dp" />
+</shape>
