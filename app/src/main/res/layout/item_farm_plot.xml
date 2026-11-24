@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One plot: the plant art, then its crop and how far along it is. The content description
+     (crop, stage, planting date) is set in code; the children are decorative to TalkBack.
+     The adapter turns on clipToOutline so the art keeps the card's rounded corners. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/plot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:background="@drawable/bg_row_single"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/farm_plot_padding">
+
+    <com.example.assignmenttracker.ui.farm.PlantView
+        android:id="@+id/art"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/farm_plot_art_height"
+        android:background="@color/farm_sky" />
+
+    <TextView
+        android:id="@+id/cropName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:importantForAccessibility="no"
+        android:paddingStart="@dimen/farm_plot_padding"
+        android:paddingEnd="@dimen/farm_plot_padding"
+        android:textAppearance="@style/TextAppearance.AT.SectionLabel"
+        tools:text="Maíz" />
+
+    <TextView
+        android:id="@+id/stage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
+        android:maxLines="2"
+        android:paddingStart="@dimen/farm_plot_padding"
+        android:paddingEnd="@dimen/farm_plot_padding"
+        android:textAppearance="@style/TextAppearance.AT.RowMeta"
+        tools:text="Sprout · day 2" />
+</LinearLayout>

@@ -26,6 +26,9 @@ import com.example.assignmenttracker.ui.assignments.HomeItems;
 import com.example.assignmenttracker.ui.assignments.PendingUndo;
 import com.example.assignmenttracker.ui.assignments.SwipeToDeleteCallback;
 import com.example.assignmenttracker.ui.buddy.StudyBuddyController;
+import com.example.assignmenttracker.ui.farm.FarmActivity;
+import com.example.assignmenttracker.ui.farm.FarmState;
+import com.example.assignmenttracker.ui.farm.FarmViewModel;
 import com.example.assignmenttracker.util.DueDates;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private AssignmentsViewModel viewModel;
     private AssignmentListAdapter adapter;
     private StudyBuddyController buddy;
+    /** Milpa seeds waiting last time; -1 before the first load (so launch never "earns" one). */
+    private int shownSeeds = -1;
     @Nullable private Snackbar snackbar;
     private boolean openingEditor;
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -62,9 +67,12 @@ public class MainActivity extends AppCompatActivity {
         ViewCompat.setAccessibilityHeading(binding.title, true);
         applyInsets();
 
+        App app = (App) getApplication();
         AssignmentsViewModel vm = new ViewModelProvider(this,
-                AssignmentsViewModel.factory(((App) getApplication()).getAssignmentRepository()))
+                AssignmentsViewModel.factory(app.getAssignmentRepository(), app.getFarmRepository()))
                 .get(AssignmentsViewModel.class);
+        FarmViewModel farm = new ViewModelProvider(this, FarmViewModel.factory(app.getFarmRepository()))
+                .get(FarmViewModel.class);
 
         viewModel = vm;
         buddy = new StudyBuddyController(binding.buddyAvatar, binding.buddyBubble);
@@ -123,6 +131,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.fabAdd.setOnClickListener(v -> openEditor(null));
+
+        // Milpa: the button shows seeds waiting; a newly earned seed gets its own buddy line.
+        binding.btnMilpa.setOnClickListener(v -> openMilpa());
+        farm.getState().observe(this, this::renderMilpa);
 
         // design.md §6: shrink on scroll down past 16dp, extend on scroll up.
         int threshold = getResources().getDimensionPixelSize(R.dimen.fab_scroll_threshold);
@@ -227,6 +239,26 @@ public class MainActivity extends AppCompatActivity {
         s.setAnchorView(binding.fabAdd).show();
     }
 
+    private void renderMilpa(@NonNull FarmState s) {
+        if (s.seeds > 0) {
+            binding.btnMilpa.setText(getResources().getQuantityString(R.plurals.farm_open_seeds, s.seeds, s.seeds));
+            binding.btnMilpa.setContentDescription(
+                    getResources().getQuantityString(R.plurals.farm_open_seeds_cd, s.seeds, s.seeds));
+        } else {
+            binding.btnMilpa.setText(R.string.farm_open);
+            binding.btnMilpa.setContentDescription(getString(R.string.farm_open_cd));
+        }
+        if (shownSeeds >= 0 && s.seeds > shownSeeds) buddy.announceSeed();
+        shownSeeds = s.seeds;
+    }
+
+    /** Opens the milpa. Shares the editor's one-screen-at-a-time guard. */
+    private void openMilpa() {
+        if (openingEditor) return;
+        openingEditor = true;
+        startActivity(FarmActivity.newIntent(this));
+    }
+
     /**
      * Opens Add/Edit: new when {@code id} is null, otherwise that assignment. A fast double
      * tap would start two screens (the QA-0-4 pattern), so only the first tap counts until
@@ -257,7 +289,10 @@ public class MainActivity extends AppCompatActivity {
                     WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
             binding.header.setPadding(0, bars.top, 0, 0);
             binding.title.setPadding(side + bars.left, binding.title.getPaddingTop(),
-                    side + bars.right, binding.title.getPaddingBottom());
+                    side, binding.title.getPaddingBottom());
+            ViewGroup.MarginLayoutParams milpa = (ViewGroup.MarginLayoutParams) binding.btnMilpa.getLayoutParams();
+            milpa.rightMargin = side + bars.right;
+            binding.btnMilpa.setLayoutParams(milpa);
             binding.list.setPadding(bars.left, 0, bars.right, clearance);
             binding.buddy.setPadding(side + bars.left, buddyV, side + bars.right, buddyV + bars.bottom);
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) binding.fabAdd.getLayoutParams();

@@ -51,4 +51,11 @@
     <dimen name="buddy_bubble_padding_h">14dp</dimen>
     <dimen name="buddy_bubble_padding_v">10dp</dimen>
     <dimen name="confetti_elevation">24dp</dimen>
+
+    <!-- Milpa -->
+    <dimen name="farm_plot_art_height">132dp</dimen>
+    <dimen name="farm_plot_gap">8dp</dimen>
+    <dimen name="farm_plot_padding">8dp</dimen>
+    <dimen name="farm_progress_dot">14dp</dimen>
+    <dimen name="farm_progress_dot_gap">6dp</dimen>
 </resources>

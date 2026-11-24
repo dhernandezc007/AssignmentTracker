@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.assignmenttracker.data.entity.Assignment;
 import com.example.assignmenttracker.data.repo.AssignmentRepository;
+import com.example.assignmenttracker.data.repo.CompletionLedger;
 
 import java.util.List;
 import java.util.TimeZone;
@@ -21,7 +22,8 @@ import java.util.function.Supplier;
  * Adding and editing live in {@link AssignmentEditViewModel} (Slice 2). Slice 3 added mark done,
  * delete, their Undo, and the Done section's expanded state (collapsed on every launch, not
  * persisted; design.md §3.2). Slice 4 adds the buckets (clock and zone injected), the pending
- * Undo that outlives a rotation (QA-3-2) and the reopen announcement (DES-3-3).
+ * Undo that outlives a rotation (QA-3-2) and the reopen announcement (DES-3-3). The milpa adds
+ * the {@link CompletionLedger}: a mark done credits the farm, and its Undo takes that back.
  */
 public class AssignmentsViewModel extends ViewModel {
 
@@ -31,6 +33,7 @@ public class AssignmentsViewModel extends ViewModel {
     public static final long UNDO_MIN_MS = 2000;
 
     private final AssignmentRepository repository;
+    private final CompletionLedger ledger;
     private final LongSupplier clock;
     private final Supplier<TimeZone> zone;
     private final MutableLiveData<Boolean> doneExpanded = new MutableLiveData<>(false);
@@ -44,9 +47,10 @@ public class AssignmentsViewModel extends ViewModel {
         if (error != null) writeFailed.postValue(true);
     };
 
-    public AssignmentsViewModel(@NonNull AssignmentRepository repository, @NonNull LongSupplier clock,
-                                @NonNull Supplier<TimeZone> zone) {
+    public AssignmentsViewModel(@NonNull AssignmentRepository repository, @NonNull CompletionLedger ledger,
+                                @NonNull LongSupplier clock, @NonNull Supplier<TimeZone> zone) {
         this.repository = repository;
+        this.ledger = ledger;
         this.clock = clock;
         this.zone = zone;
         homeItems.addSource(repository.observeAll(), list -> {
@@ -99,8 +103,9 @@ public class AssignmentsViewModel extends ViewModel {
 
     /**
      * Checks or unchecks a row (design.md §4b). Done sets completedAt and updatedAt to now and
-     * offers Undo; reopening clears completedAt and, once the write succeeds, is announced
-     * (DES-3-3). Asking for the state it already has writes nothing.
+     * offers Undo, and credits the milpa; reopening clears completedAt
+     * and, once the write succeeds, is announced (DES-3-3). Reopening keeps the credit: the work
+     * was done. Asking for the state it already has writes nothing.
      *
      * @return whether a write was started
      */
@@ -110,6 +115,9 @@ public class AssignmentsViewModel extends ViewModel {
         if (done) {
             pendingUndo = new PendingUndo(PendingUndo.Kind.MARK_DONE, a.copy(), now);
             repository.updateStatus(a.id, Assignment.STATUS_DONE, now, now, reportFailure);
+            // Queued right behind the status write on the same thread, so an Undo (also queued
+            // in order) always runs after it and can take it back.
+            ledger.credit(a.id, now);
         } else {
             String title = a.title;
             repository.updateStatus(a.id, Assignment.STATUS_TODO, null, now, error -> {
@@ -154,18 +162,21 @@ public class AssignmentsViewModel extends ViewModel {
             back.updatedAt = now;
             repository.insert(back, reportFailure);
         } else {
-            // The open status it had before (TODO in the MVP), with completedAt cleared.
+            // The open status it had before (TODO in the MVP), with completedAt cleared. The
+            // milpa credit that mark done created goes too (an older one from before stays).
             repository.updateStatus(p.assignment.id, p.assignment.status, null, now, reportFailure);
+            ledger.uncredit(p.assignment.id, p.shownAt);
         }
     }
 
-    public static ViewModelProvider.Factory factory(@NonNull AssignmentRepository repository) {
+    public static ViewModelProvider.Factory factory(@NonNull AssignmentRepository repository,
+                                                    @NonNull CompletionLedger ledger) {
         return new ViewModelProvider.Factory() {
             @NonNull
             @Override
             @SuppressWarnings("unchecked")
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                return (T) new AssignmentsViewModel(repository, System::currentTimeMillis, TimeZone::getDefault);
+                return (T) new AssignmentsViewModel(repository, ledger, System::currentTimeMillis, TimeZone::getDefault);
             }
         };
     }

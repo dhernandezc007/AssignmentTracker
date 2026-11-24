@@ -31,4 +31,23 @@
     <color name="buddy_hair">#DADADA</color>
     <color name="buddy_hair_light">#EFEFEF</color>
     <color name="buddy_hair_dark">#9E9E9E</color>
+
+    <!-- Milpa art (farm screen). Decorative only, never text. -->
+    <color name="farm_sky">#FFF8EC</color>
+    <color name="farm_soil">#7A4A2A</color>
+    <color name="farm_soil_dark">#5A3219</color>
+    <color name="farm_soil_furrow">#C9A47E</color>
+    <color name="farm_stem">#2F7D3A</color>
+    <color name="farm_leaf">#3E9B4F</color>
+    <color name="farm_leaf_light">#7CC36E</color>
+    <color name="farm_corn">#F5C542</color>
+    <color name="farm_tassel">#D9A441</color>
+    <color name="farm_husk">#9CCB6B</color>
+    <color name="farm_bean">#6D1F2B</color>
+    <color name="farm_bean_flower">#C9A0DC</color>
+    <color name="farm_stake">#A47148</color>
+    <color name="farm_squash">#F08A24</color>
+    <color name="farm_squash_rib">#C96A12</color>
+    <color name="farm_seed_light">#F3E7C9</color>
+    <color name="farm_flower_white">#FFFFFF</color>
 </resources>

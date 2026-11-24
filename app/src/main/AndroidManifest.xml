@@ -18,6 +18,11 @@
             android:exported="false"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
+        <!-- The milpa: seeds earned from finished assignments. Internal only: opened from Home. -->
+        <activity
+            android:name=".ui.farm.FarmActivity"
+            android:exported="false" />
+
         <!-- The only launcher (no login in v1). -->
         <activity
             android:name=".MainActivity"

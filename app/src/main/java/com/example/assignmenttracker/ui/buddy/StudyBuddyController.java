@@ -70,8 +70,17 @@ public final class StudyBuddyController {
 
     /** An assignment was just marked done: ¡a celebrar! */
     public void celebrate() {
+        cheer(StudyBuddy.Mood.CELEBRATE);
+    }
+
+    /** That mark done earned a milpa seed: this line wins over the plain cheer. */
+    public void announceSeed() {
+        cheer(StudyBuddy.Mood.SEED);
+    }
+
+    private void cheer(@NonNull StudyBuddy.Mood m) {
         cheering = true;
-        say(StudyBuddy.Mood.CELEBRATE, false);
+        say(m, false);
         bounce();
         handler.removeCallbacks(endCheer);
         handler.postDelayed(endCheer, CHEER_MS);
@@ -132,6 +141,8 @@ public final class StudyBuddyController {
                 return R.array.buddy_lines_today;
             case CELEBRATE:
                 return R.array.buddy_lines_celebrate;
+            case SEED:
+                return R.array.buddy_lines_seed;
             default:
                 return R.array.buddy_lines_steady;
         }

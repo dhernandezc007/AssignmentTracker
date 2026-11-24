@@ -128,6 +128,56 @@
         <item>¡Felicidades! ¡Que suenen las campanas!</item>
     </string-array>
 
+    <string-array name="buddy_lines_seed">
+        <item>¡Una semilla! Ve a sembrarla en tu milpa, corazón.</item>
+        <item>Tres tareas, una semilla. Como sembrábamos en el rancho.</item>
+        <item>Te ganaste una semilla, mi amor. Vamos a sembrarla juntos.</item>
+    </string-array>
+
+    <!-- Milpa -->
+    <string name="farm_title">Tu milpa</string>
+    <string name="farm_open">Milpa</string>
+    <string name="farm_open_cd">Abrir tu milpa</string>
+    <string name="farm_back_cd">Volver</string>
+    <string name="farm_intro">Cada 3 tareas que terminas te ganan una semilla. Siémbrala y mírala crecer, como las familias que trabajaron estos campos antes que nosotros.</string>
+    <string name="farm_no_seeds">Todavía no hay semillas para sembrar</string>
+    <string name="farm_progress">%1$d de %2$d tareas para tu próxima semilla</string>
+    <string name="farm_plant">Sembrar una semilla</string>
+    <string name="farm_choose_crop">¿Qué vas a sembrar?</string>
+    <string name="farm_stats">Sembradas: %1$d · Ya crecidas: %2$d</string>
+    <string name="farm_empty_field">Tu campo está listo. Termina 3 tareas para ganar tu primera semilla.</string>
+    <string name="farm_plant_failed">No se pudo sembrar. Inténtalo de nuevo.</string>
+
+    <string name="crop_choice_maiz">Maíz</string>
+    <string name="crop_choice_frijol">Frijol</string>
+    <string name="crop_choice_calabaza">Calabaza</string>
+    <string name="crop_choice_chile">Chile</string>
+
+    <string name="stage_seed">Semilla</string>
+    <string name="stage_sprout">Brote</string>
+    <string name="stage_growing">Creciendo</string>
+    <string name="stage_flowering">Floreciendo</string>
+    <string name="stage_grown">Ya creció</string>
+    <string name="plot_meta">%1$s · día %2$d</string>
+    <string name="plot_cd">%1$s, %2$s, sembrada el %3$s</string>
+    <string name="plot_empty">Lista para sembrar</string>
+
+    <plurals name="farm_seeds_to_plant">
+        <item quantity="one">%d semilla para sembrar</item>
+        <item quantity="many">%d semillas para sembrar</item>
+        <item quantity="other">%d semillas para sembrar</item>
+    </plurals>
+    <plurals name="farm_open_seeds">
+        <item quantity="one">%d semilla</item>
+        <item quantity="many">%d semillas</item>
+        <item quantity="other">%d semillas</item>
+    </plurals>
+    <plurals name="farm_open_seeds_cd">
+        <item quantity="one">Abrir tu milpa, %d semilla para sembrar</item>
+        <item quantity="many">Abrir tu milpa, %d semillas para sembrar</item>
+        <item quantity="other">Abrir tu milpa, %d semillas para sembrar</item>
+    </plurals>
+
     <!-- "many" repite "other" para que lint MissingQuantity quede limpio (design.md §11.2). -->
     <plurals name="summary_overdue">
         <item quantity="one">%d vencida</item>

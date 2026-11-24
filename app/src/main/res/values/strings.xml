@@ -141,6 +141,64 @@
         <item>¡Felicidades! Ring the bells!</item>
     </string-array>
 
+    <string-array name="buddy_lines_seed">
+        <item>¡Una semilla! Go plant it in your milpa, corazón.</item>
+        <item>Three done, one seed. Just like we planted back home.</item>
+        <item>You earned a seed, mi amor. Let\'s plant it together.</item>
+    </string-array>
+
+    <!-- Milpa: every 3 finished assignments earn a seed to plant. Crop names stay in Spanish
+         in every language; the chooser adds the English gloss. -->
+    <string name="farm_title">Your milpa</string>
+    <string name="farm_open">Milpa</string>
+    <string name="farm_open_cd">Open your milpa</string>
+    <string name="farm_back_cd">Back</string>
+    <string name="farm_intro">Every 3 assignments you finish earn a seed. Plant it and watch it grow, like the families who worked these fields before us.</string>
+    <string name="farm_no_seeds">No seeds to plant yet</string>
+    <!-- %1$d assignments done toward the next seed, %2$d needed (3) -->
+    <string name="farm_progress">%1$d of %2$d assignments toward your next seed</string>
+    <string name="farm_plant">Plant a seed</string>
+    <string name="farm_choose_crop">What will you plant?</string>
+    <!-- %1$d plots planted, %2$d of them fully grown -->
+    <string name="farm_stats">Planted: %1$d · Fully grown: %2$d</string>
+    <string name="farm_empty_field">Your field is ready. Finish 3 assignments to earn your first seed.</string>
+    <string name="farm_plant_failed">Couldn\'t plant. Try again.</string>
+
+    <string name="crop_maiz" translatable="false">Maíz</string>
+    <string name="crop_frijol" translatable="false">Frijol</string>
+    <string name="crop_calabaza" translatable="false">Calabaza</string>
+    <string name="crop_chile" translatable="false">Chile</string>
+    <string name="crop_choice_maiz">Maíz · corn</string>
+    <string name="crop_choice_frijol">Frijol · beans</string>
+    <string name="crop_choice_calabaza">Calabaza · squash</string>
+    <string name="crop_choice_chile">Chile · chile pepper</string>
+
+    <string name="stage_seed">Seed</string>
+    <string name="stage_sprout">Sprout</string>
+    <string name="stage_growing">Growing</string>
+    <string name="stage_flowering">Flowering</string>
+    <string name="stage_grown">Fully grown</string>
+    <!-- %1$s is a stage ("Sprout"), %2$d the day since planting -->
+    <string name="plot_meta">%1$s · day %2$d</string>
+    <!-- TalkBack: crop, stage, planting date ("Maíz, Sprout, planted Monday, November 23") -->
+    <string name="plot_cd">%1$s, %2$s, planted %3$s</string>
+    <!-- An empty furrow in the field -->
+    <string name="plot_empty">Ready for a seed</string>
+
+    <plurals name="farm_seeds_to_plant">
+        <item quantity="one">%d seed to plant</item>
+        <item quantity="other">%d seeds to plant</item>
+    </plurals>
+    <!-- Home milpa button when seeds are waiting -->
+    <plurals name="farm_open_seeds">
+        <item quantity="one">%d seed</item>
+        <item quantity="other">%d seeds</item>
+    </plurals>
+    <plurals name="farm_open_seeds_cd">
+        <item quantity="one">Open your milpa, %d seed to plant</item>
+        <item quantity="other">Open your milpa, %d seeds to plant</item>
+    </plurals>
+
     <plurals name="summary_overdue">
         <item quantity="one">%d overdue</item>
         <item quantity="other">%d overdue</item>

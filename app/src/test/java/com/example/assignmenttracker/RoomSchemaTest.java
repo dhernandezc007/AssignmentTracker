@@ -36,6 +36,37 @@ public class RoomSchemaTest {
         assertFalse("courseId must be gone from schema v1", json.contains("courseId"));
         assertTrue("course is nullable TEXT",
                 json.contains("`course` TEXT,") || json.contains("`course` TEXT)"));
-        assertFalse("still a single schema version", new File(DIR, "2.json").exists());
+    }
+
+    /**
+     * The milpa (v2) adds two tables and leaves assignments alone, so v1 → v2 is a real
+     * migration (AppDatabase.MIGRATION_1_2), not an edit in place: v1 has been installed.
+     */
+    @Test
+    public void version2AddsTheMilpaTablesAndKeepsAssignments() throws Exception {
+        File schema = new File(DIR, "2.json");
+        assertTrue("missing " + schema.getPath(), schema.exists());
+        String json = new String(Files.readAllBytes(schema.toPath()), StandardCharsets.UTF_8);
+        assertTrue(json.contains("\"version\": 2"));
+        for (String table : new String[]{"assignments", "farm_credits", "farm_plots"}) {
+            assertTrue("table " + table, json.contains("\"tableName\": \"" + table + "\""));
+        }
+        assertFalse("no v3 yet", new File(DIR, "3.json").exists());
+    }
+
+    /** The hand-written migration SQL must match what Room generates, or Room won't open the DB. */
+    @Test
+    public void migrationSqlMatchesTheExportedSchema() throws Exception {
+        String json = new String(Files.readAllBytes(new File(DIR, "2.json").toPath()), StandardCharsets.UTF_8);
+        String src = new String(Files.readAllBytes(new File(
+                "src/main/java/com/example/assignmenttracker/data/db/AppDatabase.java").toPath()), StandardCharsets.UTF_8)
+                .replaceAll("\"\\s*\\+\\s*\"", "");
+        for (String table : new String[]{"farm_credits", "farm_plots"}) {
+            java.util.regex.Matcher m = java.util.regex.Pattern.compile(
+                    "\"tableName\": \"" + table + "\",\\s*\"createSql\": \"([^\"]+)\"").matcher(json);
+            assertTrue("createSql for " + table, m.find());
+            String expected = m.group(1).replace("${TABLE_NAME}", table);
+            assertTrue("MIGRATION_1_2 must run: " + expected, src.contains(expected));
+        }
     }
 }

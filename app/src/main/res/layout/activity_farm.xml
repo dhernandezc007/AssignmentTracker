@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The milpa: seeds earned from finished assignments, and the field they grow in.
+     SystemBarInsets pads the root for the system bars. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.farm.FarmActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="?android:attr/colorBackground"
+            android:elevation="0dp"
+            app:navigationContentDescription="@string/farm_back_cd"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="?attr/colorOnBackground"
+            app:title="@string/farm_title"
+            app:titleTextAppearance="@style/TextAppearance.AT.ToolbarTitle" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ribbon_height"
+            android:importantForAccessibility="no"
+            android:scaleType="fitXY"
+            android:src="@drawable/serape_stripes" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/field"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingStart="12dp"
+            android:paddingTop="@dimen/farm_plot_gap"
+            android:paddingEnd="12dp"
+            android:paddingBottom="@dimen/space_screen" />
+    </LinearLayout>
+
+    <!-- Planting is a fiesta too. -->
+    <com.example.assignmenttracker.ui.fiesta.ConfettiView
+        android:id="@+id/confetti"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="@dimen/confetti_elevation"
+        android:importantForAccessibility="no" />
+</FrameLayout>

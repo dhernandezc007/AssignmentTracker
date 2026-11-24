@@ -256,7 +256,11 @@ public class MainActivityTest {
                 int side = a.getResources().getDimensionPixelSize(R.dimen.space_screen);
                 View title = a.findViewById(R.id.title);
                 assertEquals("title clears the left cutout", side + 156, title.getPaddingLeft());
-                assertEquals("title clears the right inset", side + 48, title.getPaddingRight());
+                // The milpa button sits at the end of the title row, so it takes the right inset.
+                assertEquals("title keeps its 16dp gap before the milpa button", side, title.getPaddingRight());
+                View milpa = a.findViewById(R.id.btnMilpa);
+                assertEquals("milpa button clears the right inset", side + 48,
+                        ((android.view.ViewGroup.MarginLayoutParams) milpa.getLayoutParams()).rightMargin);
                 assertEquals("header clears the status bar", 63, a.findViewById(R.id.header).getPaddingTop());
                 View list = a.findViewById(R.id.list);
                 assertEquals("cards clear the left cutout", 156, list.getPaddingLeft());

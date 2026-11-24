@@ -27,8 +27,11 @@ public final class StudyBuddy {
         }
     }
 
-    /** Which set of lines fits the home screen right now. CELEBRATE is just after a mark done. */
-    public enum Mood { EMPTY, CAUGHT_UP, OVERDUE, DUE_TODAY, STEADY, CELEBRATE }
+    /**
+     * Which set of lines fits the home screen right now. CELEBRATE is just after a mark done,
+     * SEED just after that mark done earned a milpa seed.
+     */
+    public enum Mood { EMPTY, CAUGHT_UP, OVERDUE, DUE_TODAY, STEADY, CELEBRATE, SEED }
 
     private StudyBuddy() {
     }

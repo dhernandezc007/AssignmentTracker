@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer;
 
 import com.example.assignmenttracker.data.entity.Assignment;
 import com.example.assignmenttracker.data.repo.AssignmentRepository;
+import com.example.assignmenttracker.data.repo.CompletionLedger;
 import com.example.assignmenttracker.util.DueBucket;
 import com.example.assignmenttracker.util.DueDates;
 
@@ -44,7 +45,8 @@ public class AssignmentsViewModelTest {
 
     private long now = NOW;
     private final FakeRepo repo = new FakeRepo();
-    private final AssignmentsViewModel vm = new AssignmentsViewModel(repo, () -> now, () -> TZ);
+    private final FakeLedger ledger = new FakeLedger();
+    private final AssignmentsViewModel vm = new AssignmentsViewModel(repo, ledger, () -> now, () -> TZ);
 
     @Test
     public void homeItemsFollowTheRepository() {
@@ -102,6 +104,35 @@ public class AssignmentsViewModelTest {
         vm.undo(p);
         assertEquals(Arrays.asList("a", Assignment.STATUS_TODO, null, NOW + 3_000L), repo.statusWrites.get(1));
         assertNull("used up", vm.getPendingUndo());
+    }
+
+    /** Milpa: a mark done credits the farm, stamped with the completion time. */
+    @Test
+    public void markDoneCreditsTheMilpa() {
+        vm.setDone(Assignment.newTodo("a", "Quiz", 1L), true);
+        assertEquals(List.of("credit a@" + NOW), ledger.calls);
+    }
+
+    /** Milpa: Undo takes back exactly the credit that mark done created (earned at or after it). */
+    @Test
+    public void undoOfMarkDoneTakesTheCreditBack() {
+        vm.setDone(Assignment.newTodo("a", "Quiz", 1L), true);
+        now = NOW + 2_000L;
+        vm.undo(vm.getPendingUndo());
+        assertEquals(List.of("credit a@" + NOW, "uncredit a@" + NOW), ledger.calls);
+    }
+
+    /** Milpa: reopening and deleting keep the credit (the work was done); ignored taps add none. */
+    @Test
+    public void reopenDeleteAndIgnoredTapsLeaveTheMilpaAlone() {
+        Assignment d = Assignment.newTodo("a", "Quiz", 1L);
+        d.status = Assignment.STATUS_DONE;
+        d.completedAt = 2L;
+        vm.setDone(d, false);
+        vm.setDone(d, true);
+        vm.delete(d);
+        vm.undo(vm.getPendingUndo());
+        assertTrue(ledger.calls.isEmpty());
     }
 
     /** SEC-3-1: Undo after delete re-inserts the same entity, but updatedAt is now. */
@@ -270,6 +301,20 @@ public class AssignmentsViewModelTest {
 
     private static <T> T last(List<T> l) {
         return l.get(l.size() - 1);
+    }
+
+    static final class FakeLedger implements CompletionLedger {
+        final List<String> calls = new ArrayList<>();
+
+        @Override
+        public void credit(@NonNull String assignmentId, long at) {
+            calls.add("credit " + assignmentId + "@" + at);
+        }
+
+        @Override
+        public void uncredit(@NonNull String assignmentId, long since) {
+            calls.add("uncredit " + assignmentId + "@" + since);
+        }
     }
 
     static final class FakeRepo implements AssignmentRepository {
