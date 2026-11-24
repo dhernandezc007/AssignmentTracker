@@ -40,6 +40,25 @@
         <item name="colorOnSurfaceInverse">@color/mx_cream</item>
         <item name="colorPrimaryInverse">@color/mx_yellow</item>
 
+        <!-- Type: Nunito everywhere (values/type.xml). -->
+        <!-- No theme-wide android:fontFamily: the theme is every view's fallback attribute,
+             so it would override each text appearance's weight (buttons lose semibold). -->
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.AT.Type.DisplayLarge</item>
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.AT.Type.DisplayMedium</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.AT.Type.DisplaySmall</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.AT.Type.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.AT.Type.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.AT.Type.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.AT.Type.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.AT.Type.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.AT.Type.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.AT.Type.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.AT.Type.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.AT.Type.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.AT.Type.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.AT.Type.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.AT.Type.LabelSmall</item>
+
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.AT.Dialog</item>
         <item name="snackbarButtonStyle">@style/Widget.AT.Button.TextButton.Snackbar</item>
         <item name="snackbarStyle">@style/Widget.AT.Snackbar</item>

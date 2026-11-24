@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Nunito everywhere. Material 3's type-scale styles name their own system font, so a theme
+    android:fontFamily alone wouldn't reach buttons, fields, snackbars, dialogs or the date
+    picker. Each role here is its M3 parent with Nunito swapped in, and themes.xml points the
+    textAppearance* attributes at them. A weight can't be picked from a family below API 28,
+    so roles that need one name a single file. Nunito's middle weights read lighter than
+    Roboto's, so titles go one step up (SemiBold) and labels two (Bold) to keep buttons clear.
+-->
+<resources>
+    <style name="TextAppearance.AT.Type.DisplayLarge" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+    <style name="TextAppearance.AT.Type.DisplayMedium" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+    <style name="TextAppearance.AT.Type.DisplaySmall" parent="TextAppearance.Material3.DisplaySmall">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+    <style name="TextAppearance.AT.Type.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+    <style name="TextAppearance.AT.Type.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+    <style name="TextAppearance.AT.Type.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+    <style name="TextAppearance.AT.Type.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+    <style name="TextAppearance.AT.Type.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">@font/nunito_semibold</item>
+        <item name="android:fontFamily">@font/nunito_semibold</item>
+    </style>
+    <style name="TextAppearance.AT.Type.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">@font/nunito_semibold</item>
+        <item name="android:fontFamily">@font/nunito_semibold</item>
+    </style>
+    <style name="TextAppearance.AT.Type.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+    <style name="TextAppearance.AT.Type.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+    <style name="TextAppearance.AT.Type.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">@font/nunito</item>
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+    <style name="TextAppearance.AT.Type.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/nunito_bold</item>
+        <item name="android:fontFamily">@font/nunito_bold</item>
+    </style>
+    <style name="TextAppearance.AT.Type.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">@font/nunito_semibold</item>
+        <item name="android:fontFamily">@font/nunito_semibold</item>
+    </style>
+    <style name="TextAppearance.AT.Type.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">@font/nunito_semibold</item>
+        <item name="android:fontFamily">@font/nunito_semibold</item>
+    </style>
+</resources>

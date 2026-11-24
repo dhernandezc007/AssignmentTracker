@@ -12,7 +12,6 @@ import android.text.style.DynamicDrawableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
-import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat;
 import androidx.recyclerview.widget.DiffUtil;
@@ -38,6 +38,7 @@ import com.example.assignmenttracker.databinding.ItemSectionHeaderBinding;
 import com.example.assignmenttracker.databinding.ItemSummaryBinding;
 import com.example.assignmenttracker.util.DateFormats;
 import com.example.assignmenttracker.util.DueBucket;
+import com.example.assignmenttracker.util.FontSpan;
 import com.google.android.material.color.MaterialColors;
 
 import java.util.ArrayList;
@@ -277,7 +278,8 @@ public class AssignmentListAdapter extends ListAdapter<HomeItem, RecyclerView.Vi
                         break;
                     case TODAY:
                         dueText = dueSpoken = ctx.getString(R.string.due_today);
-                        dueSpans = new Object[]{new TypefaceSpan("sans-serif-medium"),
+                        Typeface medium = ResourcesCompat.getFont(ctx, R.font.nunito_medium);
+                        dueSpans = new Object[]{medium != null ? new FontSpan(medium) : new StyleSpan(Typeface.BOLD),
                                 new ForegroundColorSpan(ContextCompat.getColor(ctx, R.color.mx_pink_deep))};
                         break;
                     case TOMORROW:

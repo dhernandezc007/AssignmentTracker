@@ -13,6 +13,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,7 +50,8 @@ public final class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback 
         fill.setColor(MaterialColors.getColor(themed, androidx.appcompat.R.attr.colorError));
         label.setColor(white);
         label.setTextSize(context.getResources().getDimension(R.dimen.swipe_label_size));
-        label.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+        Typeface medium = ResourcesCompat.getFont(context, R.font.nunito_semibold);
+        label.setTypeface(medium != null ? medium : Typeface.DEFAULT_BOLD);
         Drawable d = ContextCompat.getDrawable(context, R.drawable.ic_delete);
         if (d == null) throw new IllegalStateException("ic_delete missing");
         icon = d.mutate();

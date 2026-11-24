@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Type scale, design.md §7.2 (only the styles Slices 1-2 use) -->
-    <style name="TextAppearance.AT.ScreenTitle" parent="TextAppearance.Material3.HeadlineSmall">
+    <!-- Type scale, design.md §7.2 (only the styles Slices 1-2 use). Parents are the Nunito
+         roles in type.xml; bold styles name the whole family so bold is the real 700 weight. -->
+    <style name="TextAppearance.AT.ScreenTitle" parent="TextAppearance.AT.Type.HeadlineSmall">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/colorOnBackground</item>
     </style>
 
-    <style name="TextAppearance.AT.StateTitle" parent="TextAppearance.Material3.TitleLarge">
+    <style name="TextAppearance.AT.StateTitle" parent="TextAppearance.AT.Type.TitleLarge">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/colorOnBackground</item>
     </style>
 
     <!-- 16sp medium -->
-    <style name="TextAppearance.AT.RowTitle" parent="TextAppearance.Material3.TitleMedium">
+    <style name="TextAppearance.AT.RowTitle" parent="TextAppearance.AT.Type.TitleMedium">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <!-- Empty-state body: 16sp regular, muted (design.md §3.5) -->
-    <style name="TextAppearance.AT.StateBody" parent="TextAppearance.Material3.BodyLarge">
+    <style name="TextAppearance.AT.StateBody" parent="TextAppearance.AT.Type.BodyLarge">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
         <!-- DES-1-2: BodyLarge tracks at 0.5sp, which looks loose next to the untracked title. -->
@@ -31,7 +32,7 @@
     <style name="TextAppearance.AT.ToolbarTitle" parent="TextAppearance.AT.StateTitle" />
 
     <!-- Row line 2: 14sp regular, muted (design.md §3.1) -->
-    <style name="TextAppearance.AT.RowMeta" parent="TextAppearance.Material3.BodyMedium">
+    <style name="TextAppearance.AT.RowMeta" parent="TextAppearance.AT.Type.BodyMedium">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
         <item name="android:letterSpacing">0</item>
@@ -45,6 +46,8 @@
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="fontFamily">@font/nunito</item>
         <item name="android:textAllCaps">false</item>
         <item name="strokeColor">@color/mx_marigold</item>
         <item name="strokeWidth">2dp</item>
@@ -96,16 +99,18 @@
     </style>
 
     <!-- Section / Done header label: 14sp bold, sentence case (design.md §3.2) -->
-    <style name="TextAppearance.AT.SectionLabel" parent="TextAppearance.Material3.TitleSmall">
+    <style name="TextAppearance.AT.SectionLabel" parent="TextAppearance.AT.Type.TitleSmall">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/nunito</item>
+        <item name="fontFamily">@font/nunito</item>
         <item name="android:textColor">?attr/colorOnBackground</item>
         <item name="android:letterSpacing">0</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <!-- Section / Done header count: 14sp regular, muted (design.md §3.2) -->
-    <style name="TextAppearance.AT.SectionCount" parent="TextAppearance.Material3.BodyMedium">
+    <style name="TextAppearance.AT.SectionCount" parent="TextAppearance.AT.Type.BodyMedium">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
         <item name="android:letterSpacing">0</item>
@@ -135,14 +140,14 @@
     </style>
 
     <!-- Summary line, 16sp medium (design.md §3.4) -->
-    <style name="TextAppearance.AT.Summary" parent="TextAppearance.Material3.TitleMedium">
+    <style name="TextAppearance.AT.Summary" parent="TextAppearance.AT.Type.TitleMedium">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">?attr/colorOnBackground</item>
         <item name="android:letterSpacing">0</item>
     </style>
 
     <!-- Study buddy speech bubble: 15sp, brown on white -->
-    <style name="TextAppearance.AT.BuddyBubble" parent="TextAppearance.Material3.BodyLarge">
+    <style name="TextAppearance.AT.BuddyBubble" parent="TextAppearance.AT.Type.BodyLarge">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:letterSpacing">0</item>
